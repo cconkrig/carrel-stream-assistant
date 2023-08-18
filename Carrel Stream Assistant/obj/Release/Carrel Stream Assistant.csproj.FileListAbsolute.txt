@@ -1,0 +1,39 @@
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\CarrelStreamAssistant.ico
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\Carrel Stream Assistant.exe.config
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\Carrel Stream Assistant.exe
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\Carrel Stream Assistant.pdb
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\Carrel Stream Assistant Custom Controls Library.dll
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\EntityFramework.dll
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\EntityFramework.SqlServer.dll
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\Microsoft.Win32.Registry.dll
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\NAudio.Asio.dll
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\NAudio.Core.dll
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\NAudio.dll
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\NAudio.Midi.dll
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\NAudio.Wasapi.dll
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\NAudio.WinForms.dll
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\NAudio.WinMM.dll
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\System.Data.SQLite.dll
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\System.Data.SQLite.EF6.dll
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\System.Data.SQLite.Linq.dll
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\System.Security.AccessControl.dll
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\System.Security.Principal.Windows.dll
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\Carrel Stream Assistant Custom Controls Library.pdb
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\EntityFramework.xml
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\EntityFramework.SqlServer.xml
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\Microsoft.Win32.Registry.xml
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\NAudio.xml
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\System.Data.SQLite.xml
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\System.Security.AccessControl.xml
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Release\System.Security.Principal.Windows.xml
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Release\Carrel Stream Assistant.csproj.AssemblyReference.cache
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Release\Carrel Stream Assistant.exe.config
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Release\Carrel_Stream_Assistant.AboutBox.resources
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Release\Carrel_Stream_Assistant.FormSetup.resources
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Release\Carrel_Stream_Assistant.MainForm.resources
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Release\Carrel_Stream_Assistant.Properties.Resources.resources
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Release\Carrel Stream Assistant.csproj.GenerateResource.cache
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Release\Carrel Stream Assistant.csproj.CoreCompileInputs.cache
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Release\Carrel Stream Assistant.csproj.CopyComplete
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Release\Carrel Stream Assistant.exe
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Release\Carrel Stream Assistant.pdb
