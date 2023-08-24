@@ -81,18 +81,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_3FAFEC7089739134A14B145FE1249C6C"
-        "OwnerKey" = "8:_6F760C75FD03DE8CFBC86D3A186DCF2A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_3FAFEC7089739134A14B145FE1249C6C"
-        "OwnerKey" = "8:_196B9B8CC64F1D23E9076386C7FB20E9"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_45AEEBAD07227C920CA79940719CD9BE"
         "OwnerKey" = "8:_E7D8624CEC0840EDB06878B7B71C0FBC"
         "MsmSig" = "8:_UNDEFINED"
@@ -125,12 +113,6 @@
         {
         "MsmKey" = "8:_50EB72668956BF6779215CDCAD3CF778"
         "OwnerKey" = "8:_2C50C4D5209FC0610A1E1A795803503A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6DA641399C7941D1B2CF720707CD64E7"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -766,26 +748,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6DA641399C7941D1B2CF720707CD64E7"
-            {
-            "SourcePath" = "8:..\\Carrel Stream Assistant\\DefaultLog.txt"
-            "TargetName" = "8:DefaultLog.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_C4A7E5E059C1451A9B8090174BDF9ECD"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6E297CBD5C84C55F2EA23309E6A7FFE6"
             {
             "AssemblyRegister" = "3:1"
@@ -1103,11 +1065,6 @@
             "AssemblyAsmDisplayName" = "8:Carrel Stream Assistant Custom Controls Library, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_9C793677DF06BDE916725F0D6BA5D141"
-                    {
-                    "Name" = "8:Carrel Stream Assistant Custom Controls Library.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Carrel Stream Assistant Custom Controls Library.dll"
             "TargetName" = "8:"
@@ -1154,7 +1111,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:TRUE"
+            "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -1185,7 +1142,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:TRUE"
+            "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -1296,17 +1253,6 @@
                             "Property" = "8:_862C0979A7B343BAA1CB225F1D9CCC9C"
                                 "Folders"
                                 {
-                                    "{9EF0B969-E518-4E46-987F-47570745A589}:_C4A7E5E059C1451A9B8090174BDF9ECD"
-                                    {
-                                    "Name" = "8:log"
-                                    "AlwaysCreate" = "11:FALSE"
-                                    "Condition" = "8:"
-                                    "Transitive" = "11:FALSE"
-                                    "Property" = "8:_5B51E4BCC3FB45079C49C9A8437A9DF9"
-                                        "Folders"
-                                        {
-                                        }
-                                    }
                                 }
                             }
                         }
@@ -1352,15 +1298,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Carrel Stream Assistant"
-        "ProductCode" = "8:{165F94E8-3F3A-4254-8BE5-90B815B1F577}"
-        "PackageCode" = "8:{5867CD87-0C31-49D5-BFF4-45594D536D91}"
+        "ProductCode" = "8:{1578546A-9658-4948-9166-476F45ACF9A0}"
+        "PackageCode" = "8:{8BC536FF-929D-4AAF-B4E7-F22A335E577F}"
         "UpgradeCode" = "8:{0BAB1EE3-A1CA-4D1A-81B5-15FC2116BF8E}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.5"
+        "ProductVersion" = "8:1.0.8"
         "Manufacturer" = "8:Cyber-Comp Technologies, LLC."
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

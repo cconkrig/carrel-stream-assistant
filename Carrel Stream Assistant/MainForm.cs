@@ -25,7 +25,7 @@ namespace Carrel_Stream_Assistant
         #pragma warning disable IDE0044 // Disable "Make field readonly" suggestion
         private IPAddress serverIpAddress;
         private static IPEndPoint senderEndPoint;
-        private readonly int maxLogEntries = 2000; // Maximum number of log entries
+        private readonly int maxLogEntries = 2000; // Maximum number of log entries in gui
         private WaveOutEvent waveOutDevice1;
         private WaveOutEvent waveOutDevice2;
         private AudioFileReader audioFileReader1;
@@ -40,6 +40,7 @@ namespace Carrel_Stream_Assistant
         private System.Threading.Timer updateTimer2;
         private bool NetCueProcessingModeState = false;
         private MMDevice inputAudioDevice;
+        private float audioFeedVolumeAtStartup = 0.0f;
 
         public MainForm()
         {
@@ -66,6 +67,10 @@ namespace Carrel_Stream_Assistant
             udpClient = new UdpClient(netCuePort);
             udpClient.BeginReceive(ReceiveCallback, null);
             AddLog($"Carrel Stream Assistant Started. Listening for NetCues on {serverIpAddress} UDP Port {netCuePort}...");
+            // Get startup volume level so we know what to put it back to
+            audioFeedVolumeAtStartup = GetAudioFeedVolume();
+            float dB = ConvertLinearToDB(audioFeedVolumeAtStartup);
+            AddLog($"Current Audio Feed Input Device volume is: {dB:F2} dB");
             TslblStatus.Text = $"Server: {serverIpAddress}:{netCuePort}";
             UpdateMode($"Mode: {NetCueMode}"); //make sure this comes last as we need the start-up line first.
         }
@@ -73,6 +78,35 @@ namespace Carrel_Stream_Assistant
         private void MainForm_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private float GetAudioFeedVolume()
+        {
+            string audioInputDeviceText = DatabaseOperations.GetSelectedAudioInputDeviceIdFromDatabase();
+            var enumerator = new MMDeviceEnumerator();
+            float currentVolume = 0.0f; // Default value if volume retrieval fails
+
+            if (audioInputDeviceText != null && audioInputDeviceText != "")
+            {
+                foreach (var device in enumerator.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active))
+                {
+                    if (device.FriendlyName == audioInputDeviceText)
+                    {
+                        string deviceID = device.ID;
+                        var inputAudioDevice = enumerator.GetDevice(deviceID);
+                        currentVolume = inputAudioDevice.AudioEndpointVolume.MasterVolumeLevelScalar;
+                        break; // Exit loop since we found the desired device
+                    }
+                }
+            }
+            else
+            {
+                // get the default system input
+                MMDevice defaultInputDevice = enumerator.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Console);
+                currentVolume = defaultInputDevice.AudioEndpointVolume.MasterVolumeLevelScalar;
+            }
+
+            return currentVolume;
         }
 
         // Expose a public method to update the ToolStripMode
@@ -95,8 +129,12 @@ namespace Carrel_Stream_Assistant
                 TslblStartStop.Visible = true;
                 TslblStartStop.Text = "Processing Disabled";
                 TslblStartStop.ForeColor = Color.Red;
+                NetCueProcessingModeState = false;
+
+                // Immediately set the requested Audio Feed Volume to startup value
+                float dB = ConvertLinearToDB(audioFeedVolumeAtStartup);
+                SetAudioFeedVolume(audioFeedVolumeAtStartup, dB); // return to normal volume when the software was started.
             }
-            NetCueProcessingModeState = false;
         }
 
         private float ConvertLinearToDB(float linearValue)
@@ -165,6 +203,7 @@ namespace Carrel_Stream_Assistant
                             NetCueProcessingModeState = true;
                             AddLog($"Received NetCue Start Command: \"{receivedText}\" from {senderEndPoint.Address}");
                             AddLog("NetCue processing is enabled! Listening for valid NetCues.");
+                            TslblStartStop.Visible = true;
                             TslblStartStop.Text = "Processing Enabled";
                             TslblStartStop.ForeColor = Color.Green;
                             // Immediately set the requested Audio Feed Volume
@@ -181,10 +220,12 @@ namespace Carrel_Stream_Assistant
                             NetCueProcessingModeState = false;
                             AddLog($"Received NetCue Stop Command: \"{receivedText}\" from {senderEndPoint.Address}");
                             AddLog("NetCue processing is disabled! No longer listening for valid NetCues.");
+                            TslblStartStop.Visible = true;
                             TslblStartStop.Text = "Processing Disabled";
                             TslblStartStop.ForeColor = Color.Red;
                             // Immediately set the requested Audio Feed Volume
-                            SetAudioFeedVolume(0.0f, 0.0f); // full volume
+                            float dB = ConvertLinearToDB(audioFeedVolumeAtStartup);
+                            SetAudioFeedVolume(audioFeedVolumeAtStartup, dB); // return to normal volume when the software was started.
                         }
                         else
                         {
@@ -283,19 +324,36 @@ namespace Carrel_Stream_Assistant
             DateTime now = DateTime.Now;
             DateTime currentDate = now.Date;
             DateTime oldestAllowedDate = currentDate.AddDays(-7);
+            string currentlogFileName = $"log_{currentDate:yyyyMMdd}.txt";
+            string currentlogFilePath = Path.Combine(logDirectory, currentlogFileName);
+
             foreach (string logFile in logFiles)
             {
                 DateTime fileDate = File.GetCreationTime(logFile);
                 if (fileDate < oldestAllowedDate)
                 {
-                    File.Delete(logFile);
+                    try
+                    {
+                        File.Delete(logFile);
+                    }
+                    catch (UnauthorizedAccessException ex)
+                    {
+                        // Log the specific error message or exception details
+                        string errorMessage = $"Failed to delete file: {logFile}. Error: {ex.Message}";
+                        using (StreamWriter writer = File.AppendText(currentlogFilePath))
+                        {
+                            writer.WriteLine(errorMessage);
+                        }
+                    }
                 }
             }
-            string logFileName = $"log_{currentDate:yyyyMMdd}.txt";
-            string logFilePath = Path.Combine(logDirectory, logFileName);
-            using (StreamWriter writer = File.AppendText(logFilePath))
+
+            if (!File.Exists(currentlogFilePath)) // Check if the file exists
             {
-                writer.WriteLine($"{now:yyyy-MM-dd HH:mm:ss} :: Log file created.");
+                using (StreamWriter writer = File.AppendText(currentlogFilePath))
+                {
+                    writer.WriteLine($"{now:yyyy-MM-dd HH:mm:ss} :: Log file created.");
+                }
             }
         }
 
