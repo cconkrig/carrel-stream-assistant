@@ -30,11 +30,13 @@ namespace Carrel_Stream_Assistant
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSetup));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabGeneral = new System.Windows.Forms.TabPage();
+            this.label7 = new System.Windows.Forms.Label();
+            this.sliderInputVolume = new System.Windows.Forms.TrackBar();
             this.ComboBoxNetCueProcessingMode = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
             this.BtnCancelGeneral = new System.Windows.Forms.Button();
@@ -45,6 +47,7 @@ namespace Carrel_Stream_Assistant
             this.LabelNetCueStart = new System.Windows.Forms.Label();
             this.TextBoxUDPListener = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.tabNetCues = new System.Windows.Forms.TabPage();
             this.lblNetCuesDirections = new System.Windows.Forms.Label();
             this.btnNetCueDelete = new System.Windows.Forms.Button();
@@ -74,6 +77,10 @@ namespace Carrel_Stream_Assistant
             this.label1 = new System.Windows.Forms.Label();
             this.lblRotNetCues = new System.Windows.Forms.Label();
             this.cboRotNetCues = new System.Windows.Forms.ComboBox();
+            this.tabReeltoReel = new System.Windows.Forms.TabPage();
+            this.btnReel2ReelDelete = new System.Windows.Forms.Button();
+            this.btnReel2ReelEdit = new System.Windows.Forms.Button();
+            this.btnReel2ReelAdd = new System.Windows.Forms.Button();
             this.tabHardware = new System.Windows.Forms.TabPage();
             this.cboAudioOutput = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -81,18 +88,22 @@ namespace Carrel_Stream_Assistant
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.cboAudioFeedInput = new System.Windows.Forms.ComboBox();
-            this.sliderInputVolume = new System.Windows.Forms.TrackBar();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
             this.ttVolume = new System.Windows.Forms.ToolTip(this.components);
+            this.dgReelToReel = new System.Windows.Forms.DataGridView();
+            this.R2RColRecording = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.R2RColStartCommand = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.R2RColStopCommand = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.R2RColMaxLength = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl1.SuspendLayout();
             this.tabGeneral.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.sliderInputVolume)).BeginInit();
             this.tabNetCues.SuspendLayout();
             this.grpBoxNetCue.SuspendLayout();
             this.tabRotations.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgRots)).BeginInit();
+            this.tabReeltoReel.SuspendLayout();
             this.tabHardware.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.sliderInputVolume)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgReelToReel)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -100,6 +111,7 @@ namespace Carrel_Stream_Assistant
             this.tabControl1.Controls.Add(this.tabGeneral);
             this.tabControl1.Controls.Add(this.tabNetCues);
             this.tabControl1.Controls.Add(this.tabRotations);
+            this.tabControl1.Controls.Add(this.tabReeltoReel);
             this.tabControl1.Controls.Add(this.tabHardware);
             this.tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabControl1.Location = new System.Drawing.Point(12, 7);
@@ -130,6 +142,28 @@ namespace Carrel_Stream_Assistant
             this.tabGeneral.TabIndex = 3;
             this.tabGeneral.Text = "General";
             this.tabGeneral.UseVisualStyleBackColor = true;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(20, 259);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(423, 16);
+            this.label7.TabIndex = 11;
+            this.label7.Text = "Audio Feed Input Volume While NetCue Processing Enabled";
+            // 
+            // sliderInputVolume
+            // 
+            this.sliderInputVolume.Location = new System.Drawing.Point(20, 278);
+            this.sliderInputVolume.Maximum = 100;
+            this.sliderInputVolume.Name = "sliderInputVolume";
+            this.sliderInputVolume.Size = new System.Drawing.Size(610, 45);
+            this.sliderInputVolume.SmallChange = 5;
+            this.sliderInputVolume.TabIndex = 20;
+            this.sliderInputVolume.TickFrequency = 10;
+            this.sliderInputVolume.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.sliderInputVolume.Scroll += new System.EventHandler(this.SliderInputVolume_Scroll);
             // 
             // ComboBoxNetCueProcessingMode
             // 
@@ -233,6 +267,14 @@ namespace Carrel_Stream_Assistant
             this.label8.Size = new System.Drawing.Size(190, 16);
             this.label8.TabIndex = 0;
             this.label8.Text = "NetCue UDP Listener Port:";
+            // 
+            // label9
+            // 
+            this.label9.Location = new System.Drawing.Point(20, 326);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(607, 68);
+            this.label9.TabIndex = 21;
+            this.label9.Text = resources.GetString("label9.Text");
             // 
             // tabNetCues
             // 
@@ -454,8 +496,8 @@ namespace Carrel_Stream_Assistant
             // 
             // DateStart
             // 
-            dataGridViewCellStyle1.Format = "yyyy-MM-dd HH:mm";
-            this.DateStart.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Format = "yyyy-MM-dd HH:mm";
+            this.DateStart.DefaultCellStyle = dataGridViewCellStyle3;
             this.DateStart.HeaderText = "Start Date";
             this.DateStart.Name = "DateStart";
             this.DateStart.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -463,8 +505,8 @@ namespace Carrel_Stream_Assistant
             // 
             // DateEnd
             // 
-            dataGridViewCellStyle2.Format = "yyyy-MM-dd HH:mm";
-            this.DateEnd.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Format = "yyyy-MM-dd HH:mm";
+            this.DateEnd.DefaultCellStyle = dataGridViewCellStyle4;
             this.DateEnd.HeaderText = "End Date";
             this.DateEnd.Name = "DateEnd";
             this.DateEnd.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -546,6 +588,49 @@ namespace Carrel_Stream_Assistant
             this.cboRotNetCues.TabIndex = 0;
             this.cboRotNetCues.SelectedIndexChanged += new System.EventHandler(this.CboRotNetCues_SelectedIndexChanged);
             // 
+            // tabReeltoReel
+            // 
+            this.tabReeltoReel.Controls.Add(this.dgReelToReel);
+            this.tabReeltoReel.Controls.Add(this.btnReel2ReelDelete);
+            this.tabReeltoReel.Controls.Add(this.btnReel2ReelEdit);
+            this.tabReeltoReel.Controls.Add(this.btnReel2ReelAdd);
+            this.tabReeltoReel.Location = new System.Drawing.Point(4, 25);
+            this.tabReeltoReel.Name = "tabReeltoReel";
+            this.tabReeltoReel.Size = new System.Drawing.Size(662, 453);
+            this.tabReeltoReel.TabIndex = 4;
+            this.tabReeltoReel.Text = "Reel-to-Reel";
+            this.tabReeltoReel.UseVisualStyleBackColor = true;
+            // 
+            // btnReel2ReelDelete
+            // 
+            this.btnReel2ReelDelete.Enabled = false;
+            this.btnReel2ReelDelete.Location = new System.Drawing.Point(568, 405);
+            this.btnReel2ReelDelete.Name = "btnReel2ReelDelete";
+            this.btnReel2ReelDelete.Size = new System.Drawing.Size(78, 32);
+            this.btnReel2ReelDelete.TabIndex = 4;
+            this.btnReel2ReelDelete.Text = "Delete";
+            this.btnReel2ReelDelete.UseVisualStyleBackColor = true;
+            // 
+            // btnReel2ReelEdit
+            // 
+            this.btnReel2ReelEdit.Enabled = false;
+            this.btnReel2ReelEdit.Location = new System.Drawing.Point(484, 405);
+            this.btnReel2ReelEdit.Name = "btnReel2ReelEdit";
+            this.btnReel2ReelEdit.Size = new System.Drawing.Size(78, 32);
+            this.btnReel2ReelEdit.TabIndex = 3;
+            this.btnReel2ReelEdit.Text = "Edit";
+            this.btnReel2ReelEdit.UseVisualStyleBackColor = true;
+            // 
+            // btnReel2ReelAdd
+            // 
+            this.btnReel2ReelAdd.Location = new System.Drawing.Point(400, 405);
+            this.btnReel2ReelAdd.Name = "btnReel2ReelAdd";
+            this.btnReel2ReelAdd.Size = new System.Drawing.Size(78, 32);
+            this.btnReel2ReelAdd.TabIndex = 2;
+            this.btnReel2ReelAdd.Text = "Add";
+            this.btnReel2ReelAdd.UseVisualStyleBackColor = true;
+            this.btnReel2ReelAdd.Click += new System.EventHandler(this.BtnReel2ReelAdd_Click);
+            // 
             // tabHardware
             // 
             this.tabHardware.Controls.Add(this.cboAudioOutput);
@@ -619,35 +704,52 @@ namespace Carrel_Stream_Assistant
             this.cboAudioFeedInput.TabIndex = 0;
             this.cboAudioFeedInput.SelectedIndexChanged += new System.EventHandler(this.CboAudioFeedInput_SelectedIndexChanged);
             // 
-            // sliderInputVolume
+            // dgReelToReel
             // 
-            this.sliderInputVolume.Location = new System.Drawing.Point(20, 278);
-            this.sliderInputVolume.Maximum = 100;
-            this.sliderInputVolume.Name = "sliderInputVolume";
-            this.sliderInputVolume.Size = new System.Drawing.Size(610, 45);
-            this.sliderInputVolume.SmallChange = 5;
-            this.sliderInputVolume.TabIndex = 20;
-            this.sliderInputVolume.TickFrequency = 10;
-            this.sliderInputVolume.TickStyle = System.Windows.Forms.TickStyle.Both;
-            this.sliderInputVolume.Scroll += new System.EventHandler(this.SliderInputVolume_Scroll);
+            this.dgReelToReel.AllowUserToAddRows = false;
+            this.dgReelToReel.AllowUserToDeleteRows = false;
+            this.dgReelToReel.AllowUserToResizeRows = false;
+            this.dgReelToReel.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgReelToReel.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.R2RColRecording,
+            this.R2RColStartCommand,
+            this.R2RColStopCommand,
+            this.R2RColMaxLength});
+            this.dgReelToReel.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.dgReelToReel.Location = new System.Drawing.Point(18, 21);
+            this.dgReelToReel.Name = "dgReelToReel";
+            this.dgReelToReel.ReadOnly = true;
+            this.dgReelToReel.RowHeadersVisible = false;
+            this.dgReelToReel.Size = new System.Drawing.Size(628, 378);
+            this.dgReelToReel.TabIndex = 5;
             // 
-            // label7
+            // R2RColRecording
             // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(20, 259);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(423, 16);
-            this.label7.TabIndex = 11;
-            this.label7.Text = "Audio Feed Input Volume While NetCue Processing Enabled";
+            this.R2RColRecording.HeaderText = "Recording";
+            this.R2RColRecording.Name = "R2RColRecording";
+            this.R2RColRecording.ReadOnly = true;
+            this.R2RColRecording.Width = 275;
             // 
-            // label9
+            // R2RColStartCommand
             // 
-            this.label9.Location = new System.Drawing.Point(20, 326);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(607, 68);
-            this.label9.TabIndex = 21;
-            this.label9.Text = resources.GetString("label9.Text");
+            this.R2RColStartCommand.HeaderText = "Start Command";
+            this.R2RColStartCommand.Name = "R2RColStartCommand";
+            this.R2RColStartCommand.ReadOnly = true;
+            this.R2RColStartCommand.Width = 140;
+            // 
+            // R2RColStopCommand
+            // 
+            this.R2RColStopCommand.HeaderText = "Stop Command";
+            this.R2RColStopCommand.Name = "R2RColStopCommand";
+            this.R2RColStopCommand.ReadOnly = true;
+            this.R2RColStopCommand.Width = 140;
+            // 
+            // R2RColMaxLength
+            // 
+            this.R2RColMaxLength.HeaderText = "Max Length";
+            this.R2RColMaxLength.Name = "R2RColMaxLength";
+            this.R2RColMaxLength.ReadOnly = true;
+            this.R2RColMaxLength.Width = 50;
             // 
             // FormSetup
             // 
@@ -655,6 +757,7 @@ namespace Carrel_Stream_Assistant
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(694, 497);
             this.Controls.Add(this.tabControl1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormSetup";
@@ -663,15 +766,17 @@ namespace Carrel_Stream_Assistant
             this.tabControl1.ResumeLayout(false);
             this.tabGeneral.ResumeLayout(false);
             this.tabGeneral.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.sliderInputVolume)).EndInit();
             this.tabNetCues.ResumeLayout(false);
             this.grpBoxNetCue.ResumeLayout(false);
             this.grpBoxNetCue.PerformLayout();
             this.tabRotations.ResumeLayout(false);
             this.tabRotations.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgRots)).EndInit();
+            this.tabReeltoReel.ResumeLayout(false);
             this.tabHardware.ResumeLayout(false);
             this.tabHardware.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.sliderInputVolume)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgReelToReel)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -730,5 +835,14 @@ namespace Carrel_Stream_Assistant
         private System.Windows.Forms.TrackBar sliderInputVolume;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ToolTip ttVolume;
+        private System.Windows.Forms.TabPage tabReeltoReel;
+        private System.Windows.Forms.Button btnReel2ReelDelete;
+        private System.Windows.Forms.Button btnReel2ReelEdit;
+        private System.Windows.Forms.Button btnReel2ReelAdd;
+        private System.Windows.Forms.DataGridView dgReelToReel;
+        private System.Windows.Forms.DataGridViewTextBoxColumn R2RColRecording;
+        private System.Windows.Forms.DataGridViewTextBoxColumn R2RColStartCommand;
+        private System.Windows.Forms.DataGridViewTextBoxColumn R2RColStopCommand;
+        private System.Windows.Forms.DataGridViewTextBoxColumn R2RColMaxLength;
     }
 }

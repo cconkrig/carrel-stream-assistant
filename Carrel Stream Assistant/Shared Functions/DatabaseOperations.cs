@@ -265,6 +265,7 @@ namespace Carrel_Stream_Assistant
                 // Apply schema updates based on current version
                 if (currentVersion < 1) { SchemaUpdater.UpdateToVersion1(connection); }
                 if (currentVersion < 2) { SchemaUpdater.UpdateToVersion2(connection); }
+                if (currentVersion < 3) { SchemaUpdater.UpdateToVersion3(connection); }
             }
         }
 

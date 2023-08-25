@@ -29,6 +29,7 @@ C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Release\Carrel Stream Assistant.csproj.AssemblyReference.cache
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Release\Carrel Stream Assistant.exe.config
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Release\Carrel_Stream_Assistant.AboutBox.resources
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Release\Carrel_Stream_Assistant.FormReelToReel.resources
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Release\Carrel_Stream_Assistant.FormSetup.resources
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Release\Carrel_Stream_Assistant.MainForm.resources
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Release\Carrel_Stream_Assistant.Properties.Resources.resources

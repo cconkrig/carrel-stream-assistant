@@ -125,7 +125,14 @@
     <Compile Include="Classes\AudioDeviceInfo.cs" />
     <Compile Include="Classes\ColoredListBoxItem.cs" />
     <Compile Include="Classes\PlaybackQueueItem.cs" />
+    <Compile Include="Classes\ReelItem.cs" />
     <Compile Include="Classes\SchemaUpdater.cs" />
+    <Compile Include="FormReelToReel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormReelToReel.Designer.cs">
+      <DependentUpon>FormReelToReel.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormSetup.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -147,6 +154,9 @@
     <Compile Include="Shared Functions\CSAGraphics.cs" />
     <EmbeddedResource Include="AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormReelToReel.resx">
+      <DependentUpon>FormReelToReel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormSetup.resx">
       <DependentUpon>FormSetup.cs</DependentUpon>

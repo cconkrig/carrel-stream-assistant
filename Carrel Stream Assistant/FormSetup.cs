@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Globalization;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace Carrel_Stream_Assistant
 {
@@ -430,6 +431,18 @@ namespace Carrel_Stream_Assistant
 
             // Set the Id property of the rotationItem to 0 for new insertions
             rotationItem.Id = rotationItem.Id;
+        }
+
+        private void PopulateReelToReelDataGridView(DataGridView dataGridView, ReelItem reelItem)
+        {
+            int rowIndex = dataGridView.Rows.Add();
+            DataGridViewRow row = dataGridView.Rows[rowIndex];
+
+            row.Cells[1].Value = reelItem.Filename;
+            row.Cells[2].Value = reelItem.StartCommand;
+            row.Cells[3].Value = reelItem.StopCommand;
+            row.Cells[4].Value = reelItem.MaxLengthSecs;
+            row.Tag = reelItem;
         }
 
         private void BtnRotAdd_Click(object sender, EventArgs e)
@@ -912,8 +925,50 @@ namespace Carrel_Stream_Assistant
             } else if(tabControl1.SelectedTab == tabGeneral)
             {
                 LoadGeneralSettingsScreen();
+            } else if(tabControl1.SelectedTab == tabReeltoReel)
+            {
+                LoadReelToReelScreen();
             }
         }
+
+        private void LoadReelToReelScreen()
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            using (SQLiteConnection connection = new SQLiteConnection(DatabaseOperations.connectionString))
+            {
+                connection.Open();
+                string selectQuery = "SELECT Id, Format, Filename, StartCommand, StopCommand, MaxLengthSecs FROM ReelToReel ORDER BY Id DESC";
+                using (SQLiteCommand reelSelectCommand = new SQLiteCommand(selectQuery, connection))
+                {
+                    using (SQLiteDataReader reader = reelSelectCommand.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int id = reader.GetInt32(0);
+                            int format = reader.GetInt32(1);
+                            string filename = reader.GetString(2);
+                            string startcommand = reader.GetString(3);
+                            string stopcommand = reader.GetString(4);
+                            int maxlengthsecs = reader.GetInt32(5);
+
+                            ReelItem reelItem = new ReelItem
+                            {
+                                Id = id,
+                                Format = format,
+                                Filename = filename,
+                                StartCommand = startcommand,
+                                StopCommand = stopcommand,
+                                MaxLengthSecs = maxlengthsecs
+                            };
+
+                            PopulateReelToReelDataGridView(dgReelToReel, reelItem);
+                        }
+                    }
+                }
+            }
+            Cursor.Current = Cursors.Default;
+        }
+
 
         private void LoadGeneralSettingsScreen()
         {
@@ -1121,8 +1176,12 @@ namespace Carrel_Stream_Assistant
             float linearVolume = (float)sliderInputVolume.Value / sliderInputVolume.Maximum;
             float dB = ConvertLinearToDB(linearVolume);
             ttVolume.SetToolTip(sliderInputVolume, $"Volume: {dB:F2} dB");
+        }
 
-            //ttVolume.SetToolTip(sliderInputVolume, "Volume: " + CalculatePercentage(sliderInputVolume.Value) + "%");
+        private void BtnReel2ReelAdd_Click(object sender, EventArgs e)
+        {
+            FormReelToReel FormReelToReel = new FormReelToReel(this, "add");
+            FormReelToReel.ShowDialog();
         }
     }
 }

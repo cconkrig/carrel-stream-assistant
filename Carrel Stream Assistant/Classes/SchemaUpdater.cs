@@ -60,7 +60,23 @@ namespace Carrel_Stream_Assistant
             SetSchemaVersion(connection, 2);
         }
 
+        public static void UpdateToVersion3(SQLiteConnection connection)
+        {
+            using (SQLiteCommand updateCommand = new SQLiteCommand(connection))
+            {
+                updateCommand.CommandText = @"CREATE TABLE IF NOT EXISTS ReelToReel (
+                    Id INTEGER PRIMARY KEY,
+                    Format INTEGER,
+                    Filename TEXT,
+                    StartCommand TEXT,
+                    StopCommand TEXT,
+                    MaxLengthSecs INTEGER DEFAULT 0 NOT NULL
+                ); ";
+                updateCommand.ExecuteNonQuery();
+            }
 
+            SetSchemaVersion(connection, 3);
+        }
 
 
         public static int GetSchemaVersion(SQLiteConnection connection)
