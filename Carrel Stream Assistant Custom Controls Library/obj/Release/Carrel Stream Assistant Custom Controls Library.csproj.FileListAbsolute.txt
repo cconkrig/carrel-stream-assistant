@@ -1,6 +1,6 @@
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant Custom Controls Library\bin\Release\Carrel Stream Assistant Custom Controls Library.dll
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant Custom Controls Library\bin\Release\Carrel Stream Assistant Custom Controls Library.pdb
-C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant Custom Controls Library\obj\Release\Carrel Stream Assistant Custom Controls Library.csproj.AssemblyReference.cache
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant Custom Controls Library\obj\Release\Carrel Stream Assistant Custom Controls Library.csproj.CoreCompileInputs.cache
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant Custom Controls Library\obj\Release\Carrel Stream Assistant Custom Controls Library.dll
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant Custom Controls Library\obj\Release\Carrel Stream Assistant Custom Controls Library.pdb
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant Custom Controls Library\obj\Release\Carrel Stream Assistant Custom Controls Library.csproj.AssemblyReference.cache

@@ -27,6 +27,18 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_16F89F1B41B3AF2E7AE31627547A3F17"
+        "OwnerKey" = "8:_503A35F81D4867458DA6E4C3AA0F733E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_16F89F1B41B3AF2E7AE31627547A3F17"
+        "OwnerKey" = "8:_E7D8624CEC0840EDB06878B7B71C0FBC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_196B9B8CC64F1D23E9076386C7FB20E9"
         "OwnerKey" = "8:_E7D8624CEC0840EDB06878B7B71C0FBC"
         "MsmSig" = "8:_UNDEFINED"
@@ -81,6 +93,18 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_3FAFEC7089739134A14B145FE1249C6C"
+        "OwnerKey" = "8:_196B9B8CC64F1D23E9076386C7FB20E9"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_3FAFEC7089739134A14B145FE1249C6C"
+        "OwnerKey" = "8:_6F760C75FD03DE8CFBC86D3A186DCF2A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_45AEEBAD07227C920CA79940719CD9BE"
         "OwnerKey" = "8:_E7D8624CEC0840EDB06878B7B71C0FBC"
         "MsmSig" = "8:_UNDEFINED"
@@ -101,6 +125,12 @@
         {
         "MsmKey" = "8:_4C3F1BECF19B5E21153098DE21C6F486"
         "OwnerKey" = "8:_2093A4386EF8A6B5C1CF5BED37653D3E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_503A35F81D4867458DA6E4C3AA0F733E"
+        "OwnerKey" = "8:_E7D8624CEC0840EDB06878B7B71C0FBC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -249,6 +279,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_A469EFA4E4834DAB87CEED207E465ECB"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_AF401713BA5C4423646729BA8A89D6E6"
         "OwnerKey" = "8:_E7D8624CEC0840EDB06878B7B71C0FBC"
         "MsmSig" = "8:_UNDEFINED"
@@ -257,6 +293,18 @@
         {
         "MsmKey" = "8:_C162B952FC0B5E540E1FF7207BD3B59D"
         "OwnerKey" = "8:_2C50C4D5209FC0610A1E1A795803503A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C162B952FC0B5E540E1FF7207BD3B59D"
+        "OwnerKey" = "8:_A469EFA4E4834DAB87CEED207E465ECB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C1A957F4D48648038F5AF59B7392B492"
+        "OwnerKey" = "8:_E7D8624CEC0840EDB06878B7B71C0FBC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -286,6 +334,18 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_A469EFA4E4834DAB87CEED207E465ECB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_9C793677DF06BDE916725F0D6BA5D141"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_70A83616632180C8DF45B85C364A118D"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -293,6 +353,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_92641E7647416364931A2C97D287DF75"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_C1A957F4D48648038F5AF59B7392B492"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -311,6 +377,18 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_91CB433945C6E3D3942E4CDA1D81ADA4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_503A35F81D4867458DA6E4C3AA0F733E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_16F89F1B41B3AF2E7AE31627547A3F17"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -341,12 +419,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_4C3F1BECF19B5E21153098DE21C6F486"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_9C793677DF06BDE916725F0D6BA5D141"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -429,7 +501,7 @@
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
-        "Compression" = "3:2"
+        "Compression" = "3:1"
         "SignOutput" = "11:FALSE"
         "CertificateFile" = "8:"
         "PrivateKeyFile" = "8:"
@@ -508,6 +580,37 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_16F89F1B41B3AF2E7AE31627547A3F17"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Renci.SshNet, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_16F89F1B41B3AF2E7AE31627547A3F17"
+                    {
+                    "Name" = "8:Renci.SshNet.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Renci.SshNet.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_D8610C1638BC4A28839799E61BE5BB00"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -680,6 +783,37 @@
                     }
                 }
             "SourcePath" = "8:EntityFramework.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_D8610C1638BC4A28839799E61BE5BB00"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_503A35F81D4867458DA6E4C3AA0F733E"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Renci.SshNet.Async, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_503A35F81D4867458DA6E4C3AA0F733E"
+                    {
+                    "Name" = "8:Renci.SshNet.Async.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Renci.SshNet.Async.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_D8610C1638BC4A28839799E61BE5BB00"
@@ -1065,6 +1199,11 @@
             "AssemblyAsmDisplayName" = "8:Carrel Stream Assistant Custom Controls Library, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_9C793677DF06BDE916725F0D6BA5D141"
+                    {
+                    "Name" = "8:Carrel Stream Assistant Custom Controls Library.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Carrel Stream Assistant Custom Controls Library.dll"
             "TargetName" = "8:"
@@ -1094,7 +1233,7 @@
                     "_AF401713BA5C4423646729BA8A89D6E6"
                     {
                     "Name" = "8:System.Net.Http.dll"
-                    "Attributes" = "3:512"
+                    "Attributes" = "3:516"
                     }
                 }
             "SourcePath" = "8:System.Net.Http.dll"
@@ -1106,12 +1245,12 @@
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
             "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
+            "System" = "11:TRUE"
             "Permanent" = "11:FALSE"
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -1125,10 +1264,41 @@
                     "_C162B952FC0B5E540E1FF7207BD3B59D"
                     {
                     "Name" = "8:System.Net.Http.dll"
-                    "Attributes" = "3:512"
+                    "Attributes" = "3:516"
                     }
                 }
             "SourcePath" = "8:System.Net.Http.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_D8610C1638BC4A28839799E61BE5BB00"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:TRUE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C1A957F4D48648038F5AF59B7392B492"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:System.Net.FtpClient, Version=1.0.5824.34026, Culture=neutral, PublicKeyToken=fa4be07daa57c2b7, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_C1A957F4D48648038F5AF59B7392B492"
+                    {
+                    "Name" = "8:System.Net.FtpClient.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:System.Net.FtpClient.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_D8610C1638BC4A28839799E61BE5BB00"
@@ -1298,15 +1468,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Carrel Stream Assistant"
-        "ProductCode" = "8:{1578546A-9658-4948-9166-476F45ACF9A0}"
-        "PackageCode" = "8:{8BC536FF-929D-4AAF-B4E7-F22A335E577F}"
+        "ProductCode" = "8:{1AA61963-0857-442C-8A65-26DBE3B2D5A0}"
+        "PackageCode" = "8:{06A76838-89C8-487C-AA8D-E0DC0AC86B4B}"
         "UpgradeCode" = "8:{0BAB1EE3-A1CA-4D1A-81B5-15FC2116BF8E}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
-        "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.8"
+        "InstallAllUsers" = "11:TRUE"
+        "ProductVersion" = "8:1.0.10"
         "Manufacturer" = "8:Cyber-Comp Technologies, LLC."
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1897,6 +2067,34 @@
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:ReferenceCopyLocalPaths"
             "OutputProjectGuid" = "8:{FFD855BD-D954-4B20-B584-178CEBB97D94}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_A469EFA4E4834DAB87CEED207E465ECB"
+            {
+            "SourcePath" = "8:..\\Carrel Stream Assistant Custom Controls Library\\obj\\Release\\Carrel Stream Assistant Custom Controls Library.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_D8610C1638BC4A28839799E61BE5BB00"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{E9A670CE-94ED-4CF5-B6DD-04ECD8B8AE61}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {

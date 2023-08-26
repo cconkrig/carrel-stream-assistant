@@ -151,29 +151,35 @@ namespace Carrel_Stream_Assistant
 
         private void SetAudioFeedVolume(float volume, float dB)
         {
-            string audioInputDeviceText = DatabaseOperations.GetSelectedAudioInputDeviceIdFromDatabase();
-            var enumerator = new MMDeviceEnumerator();
-            if (audioInputDeviceText != null && audioInputDeviceText != "")
+            try
             {
-                foreach (var device in enumerator.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active))
+                string audioInputDeviceText = DatabaseOperations.GetSelectedAudioInputDeviceIdFromDatabase();
+                var enumerator = new MMDeviceEnumerator();
+                if (audioInputDeviceText != null && audioInputDeviceText != "")
                 {
-                    if (device.FriendlyName == audioInputDeviceText)
+                    foreach (var device in enumerator.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active))
                     {
-                        string deviceID = device.ID;
-                        inputAudioDevice = enumerator.GetDevice(deviceID);
-                        break; // Exit loop since we found the desired device
+                        if (device.FriendlyName == audioInputDeviceText)
+                        {
+                            string deviceID = device.ID;
+                            inputAudioDevice = enumerator.GetDevice(deviceID);
+                            break; // Exit loop since we found the desired device
+                        }
                     }
                 }
-            }
-            else
+                else
+                {
+                    // get the default system input
+                    MMDevice defaultInputDevice = enumerator.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Console);
+                    audioInputDeviceText = defaultInputDevice.ID;
+                    inputAudioDevice = enumerator.GetDevice(audioInputDeviceText);
+                }
+                inputAudioDevice.AudioEndpointVolume.MasterVolumeLevelScalar = volume;
+                AddLog($"Set Audio Feed Input Volume to: {dB:F2} dB");
+            }catch (Exception)
             {
-                // get the default system input
-                MMDevice defaultInputDevice = enumerator.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Console);
-                audioInputDeviceText = defaultInputDevice.ID;
-                inputAudioDevice = enumerator.GetDevice(audioInputDeviceText);
+                AddLog("Could not set volume, input device is missing.");
             }
-            inputAudioDevice.AudioEndpointVolume.MasterVolumeLevelScalar = volume;
-            AddLog($"Set Audio Feed Input Volume to: {dB:F2} dB");
         }
 
         private void ReceiveCallback(IAsyncResult ar)
