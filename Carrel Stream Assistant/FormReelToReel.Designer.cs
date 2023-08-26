@@ -46,6 +46,11 @@ namespace Carrel_Stream_Assistant
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.cboRecFormat = new System.Windows.Forms.ComboBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cboFTPUpload = new System.Windows.Forms.ComboBox();
+            this.lblRootPath = new System.Windows.Forms.Label();
+            this.txtFTPRootPath = new System.Windows.Forms.TextBox();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -90,7 +95,7 @@ namespace Carrel_Stream_Assistant
             // 
             // btnSaveReel
             // 
-            this.btnSaveReel.Location = new System.Drawing.Point(243, 302);
+            this.btnSaveReel.Location = new System.Drawing.Point(243, 431);
             this.btnSaveReel.Name = "btnSaveReel";
             this.btnSaveReel.Size = new System.Drawing.Size(79, 34);
             this.btnSaveReel.TabIndex = 4;
@@ -100,7 +105,7 @@ namespace Carrel_Stream_Assistant
             // 
             // btnReelCancel
             // 
-            this.btnReelCancel.Location = new System.Drawing.Point(342, 302);
+            this.btnReelCancel.Location = new System.Drawing.Point(342, 431);
             this.btnReelCancel.Name = "btnReelCancel";
             this.btnReelCancel.Size = new System.Drawing.Size(79, 34);
             this.btnReelCancel.TabIndex = 5;
@@ -140,6 +145,8 @@ namespace Carrel_Stream_Assistant
             this.txtMaxLengthSecs.Name = "txtMaxLengthSecs";
             this.txtMaxLengthSecs.Size = new System.Drawing.Size(150, 22);
             this.txtMaxLengthSecs.TabIndex = 9;
+            this.txtMaxLengthSecs.TextChanged += new System.EventHandler(this.TxtMaxLengthSecs_TextChanged);
+            this.txtMaxLengthSecs.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtMaxLengthSecs_KeyPress);
             // 
             // label5
             // 
@@ -165,18 +172,18 @@ namespace Carrel_Stream_Assistant
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(17, 147);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(102, 13);
+            this.label7.Size = new System.Drawing.Size(98, 13);
             this.label7.TabIndex = 12;
-            this.label7.Text = "{date} = yyyy-mm-dd";
+            this.label7.Text = "{date} = yyyyMMdd";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(17, 160);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(94, 13);
+            this.label8.Size = new System.Drawing.Size(88, 13);
             this.label8.TabIndex = 13;
-            this.label8.Text = "{time} = HH:mm:ss";
+            this.label8.Text = "{time} = HHmmss";
             // 
             // label9
             // 
@@ -213,11 +220,54 @@ namespace Carrel_Stream_Assistant
             this.cboRecFormat.Size = new System.Drawing.Size(303, 24);
             this.cboRecFormat.TabIndex = 16;
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.txtFTPRootPath);
+            this.groupBox1.Controls.Add(this.lblRootPath);
+            this.groupBox1.Controls.Add(this.cboFTPUpload);
+            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox1.Location = new System.Drawing.Point(18, 308);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(402, 117);
+            this.groupBox1.TabIndex = 17;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Automatic FTP Upload";
+            // 
+            // cboFTPUpload
+            // 
+            this.cboFTPUpload.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboFTPUpload.FormattingEnabled = true;
+            this.cboFTPUpload.Items.AddRange(new object[] {
+            "Do not automatically upload to FTP"});
+            this.cboFTPUpload.Location = new System.Drawing.Point(16, 26);
+            this.cboFTPUpload.Name = "cboFTPUpload";
+            this.cboFTPUpload.Size = new System.Drawing.Size(371, 24);
+            this.cboFTPUpload.TabIndex = 0;
+            this.cboFTPUpload.SelectedIndexChanged += new System.EventHandler(this.CboFTPUpload_SelectedIndexChanged);
+            // 
+            // lblRootPath
+            // 
+            this.lblRootPath.AutoSize = true;
+            this.lblRootPath.Location = new System.Drawing.Point(13, 64);
+            this.lblRootPath.Name = "lblRootPath";
+            this.lblRootPath.Size = new System.Drawing.Size(196, 16);
+            this.lblRootPath.TabIndex = 1;
+            this.lblRootPath.Text = "Root Path for Upload (usually /):";
+            // 
+            // txtFTPRootPath
+            // 
+            this.txtFTPRootPath.Enabled = false;
+            this.txtFTPRootPath.Location = new System.Drawing.Point(16, 83);
+            this.txtFTPRootPath.Name = "txtFTPRootPath";
+            this.txtFTPRootPath.Size = new System.Drawing.Size(371, 22);
+            this.txtFTPRootPath.TabIndex = 2;
+            // 
             // FormReelToReel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(443, 352);
+            this.ClientSize = new System.Drawing.Size(443, 477);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.cboRecFormat);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
@@ -241,6 +291,8 @@ namespace Carrel_Stream_Assistant
             this.Name = "FormReelToReel";
             this.Text = "Recording Setup";
             this.Load += new System.EventHandler(this.FormReelToReel_Load);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -265,5 +317,9 @@ namespace Carrel_Stream_Assistant
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.ComboBox cboRecFormat;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.TextBox txtFTPRootPath;
+        private System.Windows.Forms.Label lblRootPath;
+        private System.Windows.Forms.ComboBox cboFTPUpload;
     }
 }

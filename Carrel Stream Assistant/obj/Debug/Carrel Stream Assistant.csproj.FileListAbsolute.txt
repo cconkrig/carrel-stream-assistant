@@ -1,3 +1,4 @@
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\CarrelStreamAssistant.ico
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\Carrel Stream Assistant.exe.config
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\Carrel Stream Assistant.exe
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\Carrel Stream Assistant.pdb
@@ -12,9 +13,12 @@ C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\NAudio.Wasapi.dll
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\NAudio.WinForms.dll
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\NAudio.WinMM.dll
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\Renci.SshNet.Async.dll
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\Renci.SshNet.dll
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\System.Data.SQLite.dll
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\System.Data.SQLite.EF6.dll
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\System.Data.SQLite.Linq.dll
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\System.Net.FtpClient.dll
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\System.Security.AccessControl.dll
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\System.Security.Principal.Windows.dll
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\Carrel Stream Assistant Custom Controls Library.pdb
@@ -22,12 +26,17 @@ C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\EntityFramework.SqlServer.xml
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\Microsoft.Win32.Registry.xml
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\NAudio.xml
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\Renci.SshNet.xml
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\Renci.SshNet.Async.xml
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\System.Data.SQLite.xml
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\System.Net.FtpClient.xml
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\System.Security.AccessControl.xml
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\bin\Debug\System.Security.Principal.Windows.xml
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Debug\Carrel Stream Assistant.csproj.AssemblyReference.cache
-C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Debug\Carrel Stream Assistant.exe.config
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Debug\Carrel_Stream_Assistant.AboutBox.resources
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Debug\Carrel_Stream_Assistant.FormFTPOutput.resources
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Debug\Carrel_Stream_Assistant.FormFTPSetup.resources
+C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Debug\Carrel_Stream_Assistant.FormReelToReel.resources
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Debug\Carrel_Stream_Assistant.FormSetup.resources
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Debug\Carrel_Stream_Assistant.MainForm.resources
 C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\obj\Debug\Carrel_Stream_Assistant.Properties.Resources.resources

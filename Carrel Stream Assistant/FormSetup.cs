@@ -438,10 +438,10 @@ namespace Carrel_Stream_Assistant
             int rowIndex = dataGridView.Rows.Add();
             DataGridViewRow row = dataGridView.Rows[rowIndex];
 
-            row.Cells[1].Value = reelItem.Filename;
-            row.Cells[2].Value = reelItem.StartCommand;
-            row.Cells[3].Value = reelItem.StopCommand;
-            row.Cells[4].Value = reelItem.MaxLengthSecs;
+            row.Cells[0].Value = reelItem.Filename;
+            row.Cells[1].Value = reelItem.StartCommand;
+            row.Cells[2].Value = reelItem.StopCommand;
+            row.Cells[3].Value = reelItem.MaxLengthSecs;
             row.Tag = reelItem;
         }
 
@@ -931,13 +931,17 @@ namespace Carrel_Stream_Assistant
             }
         }
 
-        private void LoadReelToReelScreen()
+        public void LoadReelToReelScreen()
         {
+            btnReel2ReelAdd.Enabled = false;
+            btnReel2ReelDelete.Enabled = false;
+            btnReel2ReelEdit.Enabled = false;
+            dgReelToReel.Rows.Clear();
             Cursor.Current = Cursors.WaitCursor;
             using (SQLiteConnection connection = new SQLiteConnection(DatabaseOperations.connectionString))
             {
                 connection.Open();
-                string selectQuery = "SELECT Id, Format, Filename, StartCommand, StopCommand, MaxLengthSecs FROM ReelToReel ORDER BY Id DESC";
+                string selectQuery = "SELECT Id, Format, Filename, StartCommand, StopCommand, MaxLengthSecs, FTPServerId, FTPPath FROM ReelToReel ORDER BY Id DESC";
                 using (SQLiteCommand reelSelectCommand = new SQLiteCommand(selectQuery, connection))
                 {
                     using (SQLiteDataReader reader = reelSelectCommand.ExecuteReader())
@@ -950,6 +954,8 @@ namespace Carrel_Stream_Assistant
                             string startcommand = reader.GetString(3);
                             string stopcommand = reader.GetString(4);
                             int maxlengthsecs = reader.GetInt32(5);
+                            int ftpServerId = reader.GetInt32(6);
+                            string ftpPath = reader.GetString(7);
 
                             ReelItem reelItem = new ReelItem
                             {
@@ -958,13 +964,21 @@ namespace Carrel_Stream_Assistant
                                 Filename = filename,
                                 StartCommand = startcommand,
                                 StopCommand = stopcommand,
-                                MaxLengthSecs = maxlengthsecs
+                                MaxLengthSecs = maxlengthsecs,
+                                FTPServerId = ftpServerId,
+                                FTPPath = ftpPath
                             };
 
                             PopulateReelToReelDataGridView(dgReelToReel, reelItem);
                         }
                     }
                 }
+            }
+            btnReel2ReelAdd.Enabled = true;
+            if (dgReelToReel.SelectedRows.Count == 1)
+            {
+                btnReel2ReelDelete.Enabled = true;
+                btnReel2ReelEdit.Enabled = true;
             }
             Cursor.Current = Cursors.Default;
         }
@@ -1021,8 +1035,6 @@ namespace Carrel_Stream_Assistant
             }
             Cursor.Current = Cursors.Default;
         }
-
-        
 
         private void ReloadAndEnumerateAudioDevices()
         {
@@ -1182,6 +1194,29 @@ namespace Carrel_Stream_Assistant
         {
             FormReelToReel FormReelToReel = new FormReelToReel(this, "add");
             FormReelToReel.ShowDialog();
+        }
+
+        private void BtnReel2ReelEdit_Click(object sender, EventArgs e)
+        {
+            if (dgReelToReel.SelectedRows.Count == 1)
+            {
+                int selectedRowIndex = dgReelToReel.SelectedRows[0].Index;
+                // Load the reelItem object into a variable for use in the edit screen.
+                ReelItem editReelItem = (ReelItem)dgReelToReel.Rows[selectedRowIndex].Tag;
+                FormReelToReel FormReelToReel = new FormReelToReel(this, "edit", editReelItem);
+                FormReelToReel.ShowDialog();
+            }
+            else
+            {
+                btnReel2ReelEdit.Enabled = false;
+                btnReel2ReelDelete.Enabled = false;
+            }
+        }
+
+        private void BtnFTPSetup_Click(object sender, EventArgs e)
+        {
+            FormFTPSetup FormFTPSetup = new FormFTPSetup();
+            FormFTPSetup.ShowDialog();
         }
     }
 }

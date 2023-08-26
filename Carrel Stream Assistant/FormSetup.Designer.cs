@@ -31,8 +31,8 @@ namespace Carrel_Stream_Assistant
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSetup));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabGeneral = new System.Windows.Forms.TabPage();
             this.label7 = new System.Windows.Forms.Label();
@@ -94,6 +94,7 @@ namespace Carrel_Stream_Assistant
             this.R2RColStartCommand = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.R2RColStopCommand = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.R2RColMaxLength = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnFTPSetup = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sliderInputVolume)).BeginInit();
@@ -496,8 +497,8 @@ namespace Carrel_Stream_Assistant
             // 
             // DateStart
             // 
-            dataGridViewCellStyle3.Format = "yyyy-MM-dd HH:mm";
-            this.DateStart.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle5.Format = "yyyy-MM-dd HH:mm";
+            this.DateStart.DefaultCellStyle = dataGridViewCellStyle5;
             this.DateStart.HeaderText = "Start Date";
             this.DateStart.Name = "DateStart";
             this.DateStart.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -505,8 +506,8 @@ namespace Carrel_Stream_Assistant
             // 
             // DateEnd
             // 
-            dataGridViewCellStyle4.Format = "yyyy-MM-dd HH:mm";
-            this.DateEnd.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle6.Format = "yyyy-MM-dd HH:mm";
+            this.DateEnd.DefaultCellStyle = dataGridViewCellStyle6;
             this.DateEnd.HeaderText = "End Date";
             this.DateEnd.Name = "DateEnd";
             this.DateEnd.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -590,6 +591,7 @@ namespace Carrel_Stream_Assistant
             // 
             // tabReeltoReel
             // 
+            this.tabReeltoReel.Controls.Add(this.btnFTPSetup);
             this.tabReeltoReel.Controls.Add(this.dgReelToReel);
             this.tabReeltoReel.Controls.Add(this.btnReel2ReelDelete);
             this.tabReeltoReel.Controls.Add(this.btnReel2ReelEdit);
@@ -620,6 +622,7 @@ namespace Carrel_Stream_Assistant
             this.btnReel2ReelEdit.TabIndex = 3;
             this.btnReel2ReelEdit.Text = "Edit";
             this.btnReel2ReelEdit.UseVisualStyleBackColor = true;
+            this.btnReel2ReelEdit.Click += new System.EventHandler(this.BtnReel2ReelEdit_Click);
             // 
             // btnReel2ReelAdd
             // 
@@ -716,11 +719,12 @@ namespace Carrel_Stream_Assistant
             this.R2RColStopCommand,
             this.R2RColMaxLength});
             this.dgReelToReel.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.dgReelToReel.Location = new System.Drawing.Point(18, 21);
+            this.dgReelToReel.Location = new System.Drawing.Point(18, 20);
             this.dgReelToReel.Name = "dgReelToReel";
             this.dgReelToReel.ReadOnly = true;
             this.dgReelToReel.RowHeadersVisible = false;
-            this.dgReelToReel.Size = new System.Drawing.Size(628, 378);
+            this.dgReelToReel.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgReelToReel.Size = new System.Drawing.Size(628, 379);
             this.dgReelToReel.TabIndex = 5;
             // 
             // R2RColRecording
@@ -750,6 +754,16 @@ namespace Carrel_Stream_Assistant
             this.R2RColMaxLength.Name = "R2RColMaxLength";
             this.R2RColMaxLength.ReadOnly = true;
             this.R2RColMaxLength.Width = 50;
+            // 
+            // btnFTPSetup
+            // 
+            this.btnFTPSetup.Location = new System.Drawing.Point(18, 405);
+            this.btnFTPSetup.Name = "btnFTPSetup";
+            this.btnFTPSetup.Size = new System.Drawing.Size(211, 32);
+            this.btnFTPSetup.TabIndex = 6;
+            this.btnFTPSetup.Text = "FTP Setup";
+            this.btnFTPSetup.UseVisualStyleBackColor = true;
+            this.btnFTPSetup.Click += new System.EventHandler(this.BtnFTPSetup_Click);
             // 
             // FormSetup
             // 
@@ -844,5 +858,6 @@ namespace Carrel_Stream_Assistant
         private System.Windows.Forms.DataGridViewTextBoxColumn R2RColStartCommand;
         private System.Windows.Forms.DataGridViewTextBoxColumn R2RColStopCommand;
         private System.Windows.Forms.DataGridViewTextBoxColumn R2RColMaxLength;
+        private System.Windows.Forms.Button btnFTPSetup;
     }
 }

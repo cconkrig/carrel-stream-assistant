@@ -78,6 +78,29 @@ namespace Carrel_Stream_Assistant
             SetSchemaVersion(connection, 3);
         }
 
+        public static void UpdateToVersion4(SQLiteConnection connection)
+        {
+            using (SQLiteCommand updateCommand = new SQLiteCommand(connection))
+            {
+                updateCommand.CommandText = @"
+                CREATE TABLE IF NOT EXISTS FTPServers (
+                    Id INTEGER PRIMARY KEY,
+                    Hostname TEXT,
+                    Username TEXT,
+                    Password TEXT,
+                    Salt TEXT,
+                    SecurityMode INT DEFAULT 0 NOT NULL,
+                    TransferMode INT DEFAULT 0 NOT NULL
+                ); 
+
+                ALTER TABLE ReelToReel ADD COLUMN FTPServerId INT;
+                ALTER TABLE ReelToReel ADD COLUMN FTPPath TEXT DEFAULT '/' NOT NULL;
+                ";
+                updateCommand.ExecuteNonQuery();
+            }
+
+            SetSchemaVersion(connection, 4);
+        }
 
         public static int GetSchemaVersion(SQLiteConnection connection)
         {

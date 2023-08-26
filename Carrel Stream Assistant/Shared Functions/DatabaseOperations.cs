@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Windows.Forms;
 
 
 namespace Carrel_Stream_Assistant
@@ -11,6 +12,23 @@ namespace Carrel_Stream_Assistant
         // Define the variable in the class scope
         public readonly static string databaseName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Cyber-Comp Technologies, LLC", "Carrel Stream Assistant", "stream_assist.db");
         public readonly static string connectionString = $"Data Source={databaseName};Version=3;";
+
+        public static void CheckDatabase()
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+
+                // Get the current schema version
+                int currentVersion = SchemaUpdater.GetSchemaVersion(connection);
+
+                // Apply schema updates based on current version
+                if (currentVersion < 1) { SchemaUpdater.UpdateToVersion1(connection); }
+                if (currentVersion < 2) { SchemaUpdater.UpdateToVersion2(connection); }
+                if (currentVersion < 3) { SchemaUpdater.UpdateToVersion3(connection); }
+                if (currentVersion < 4) { SchemaUpdater.UpdateToVersion4(connection); }
+            }
+        }
 
         public static GeneralSettings GetGeneralSettingsFromDatabase()
         {
@@ -253,21 +271,204 @@ namespace Carrel_Stream_Assistant
             }
         }
 
-        public static void CheckDatabase()
+        public static void SaveReel(ReelItem reelItem)
         {
             using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
                 connection.Open();
 
-                // Get the current schema version
-                int currentVersion = SchemaUpdater.GetSchemaVersion(connection);
+                if (reelItem.Id == 0)
+                {
+                    // Insert a new record
+                    string insertQuery = "INSERT INTO ReelToReel (Format, Filename, StartCommand, StopCommand, MaxLengthSecs, FTPServerId, FTPPath) " +
+                                         "VALUES (@Format, @Filename, @StartCommand, @StopCommand, @MaxLengthSecs, @FTPServerId, @FTPPath)";
 
-                // Apply schema updates based on current version
-                if (currentVersion < 1) { SchemaUpdater.UpdateToVersion1(connection); }
-                if (currentVersion < 2) { SchemaUpdater.UpdateToVersion2(connection); }
-                if (currentVersion < 3) { SchemaUpdater.UpdateToVersion3(connection); }
+                    using (SQLiteCommand command = new SQLiteCommand(insertQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@Format", reelItem.Format);
+                        command.Parameters.AddWithValue("@Filename", reelItem.Filename);
+                        command.Parameters.AddWithValue("@StartCommand", reelItem.StartCommand);
+                        command.Parameters.AddWithValue("@StopCommand", reelItem.StopCommand);
+                        command.Parameters.AddWithValue("@MaxLengthSecs", reelItem.MaxLengthSecs);
+                        command.Parameters.AddWithValue("@FTPServerId", reelItem.FTPServerId);
+                        command.Parameters.AddWithValue("@FTPPath", reelItem.FTPPath);
+                        command.ExecuteNonQuery(); // Execute the INSERT query
+                    }
+                }
+                else
+                {
+                    // Update an existing record
+                    string updateQuery = "UPDATE ReelToReel SET Format = @Format, Filename = @Filename, StartCommand = @StartCommand, " +
+                                         "StopCommand = @StopCommand, MaxLengthSecs = @MaxLengthSecs, FTPServerId = @FTPServerId, FTPPath = @FTPPath WHERE Id = @Id";
+
+                    using (SQLiteCommand command = new SQLiteCommand(updateQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@Format", reelItem.Format);
+                        command.Parameters.AddWithValue("@Filename", reelItem.Filename);
+                        command.Parameters.AddWithValue("@StartCommand", reelItem.StartCommand);
+                        command.Parameters.AddWithValue("@StopCommand", reelItem.StopCommand);
+                        command.Parameters.AddWithValue("@MaxLengthSecs", reelItem.MaxLengthSecs);
+                        command.Parameters.AddWithValue("@FTPServerId", reelItem.FTPServerId);
+                        command.Parameters.AddWithValue("@FTPPath", reelItem.FTPPath);
+
+                        command.Parameters.AddWithValue("@Id", reelItem.Id);
+
+                        command.ExecuteNonQuery(); // Execute the UPDATE query
+                    }
+                }
             }
         }
+
+        public static void SaveFtpServerItem(FTPServerItem ftpItem)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+
+                if (ftpItem.Id == -1)
+                {
+                    // Insert new record
+                    InsertFTPServer(connection, ftpItem);
+                }
+                else
+                {
+                    // Update existing record
+                    UpdateFTPServer(connection, ftpItem);
+                }
+            }
+        }
+
+        private static void InsertFTPServer(SQLiteConnection connection, FTPServerItem ftpItem)
+        {
+            string sql = @"INSERT INTO FTPServers (Hostname, Username, Password, Salt, SecurityMode, TransferMode) 
+                      VALUES (@Hostname, @Username, @Password, @Salt, @SecurityMode, @TransferMode)";
+
+            using (SQLiteCommand command = new SQLiteCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@Hostname", ftpItem.HostName);
+                command.Parameters.AddWithValue("@Username", ftpItem.Username);
+                command.Parameters.AddWithValue("@Password", ftpItem.Password);
+                command.Parameters.AddWithValue("@Salt", ftpItem.Salt);
+                command.Parameters.AddWithValue("@SecurityMode", ftpItem.SecurityMode);
+                command.Parameters.AddWithValue("@TransferMode", ftpItem.TransferMode);
+
+                command.ExecuteNonQuery();
+            }
+        }
+
+        private static void UpdateFTPServer(SQLiteConnection connection, FTPServerItem ftpItem)
+        {
+            string sql = @"UPDATE FTPServers 
+                      SET Hostname = @Hostname, 
+                          Username = @Username, 
+                          Password = @Password, 
+                          Salt = @Salt, 
+                          SecurityMode = @SecurityMode, 
+                          TransferMode = @TransferMode, 
+                      WHERE Id = @Id";
+
+            using (SQLiteCommand command = new SQLiteCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@Id", ftpItem.Id);
+                command.Parameters.AddWithValue("@Hostname", ftpItem.HostName);
+                command.Parameters.AddWithValue("@Username", ftpItem.Username);
+                command.Parameters.AddWithValue("@Password", ftpItem.Password);
+                command.Parameters.AddWithValue("@Salt", ftpItem.Salt);
+                command.Parameters.AddWithValue("@SecurityMode", ftpItem.SecurityMode);
+                command.Parameters.AddWithValue("@TransferMode", ftpItem.TransferMode);
+
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public static FTPServerItem GetFTPServerById(int id)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+
+                string sql = "SELECT * FROM FTPServers WHERE Id = @Id";
+
+                using (SQLiteCommand command = new SQLiteCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            FTPServerItem ftpServer = new FTPServerItem
+                            {
+                                Id = Convert.ToInt32(reader["Id"]),
+                                HostName = Convert.ToString(reader["Hostname"]),
+                                Username = Convert.ToString(reader["Username"]),
+                                Password = FTPOperations.DecryptAndDesaltPassword(Convert.ToString(reader["Password"]), Convert.ToString(reader["Salt"])),
+                                Salt = Convert.ToString(reader["Salt"]),
+                                SecurityMode = Convert.ToInt32(reader["SecurityMode"]),
+                                TransferMode = Convert.ToInt32(reader["TransferMode"])
+                            };
+
+                            return ftpServer;
+                        }
+                        else
+                        {
+                            return null; // No matching record found
+                        }
+                    }
+                }
+            }
+        }
+
+        public static List<FTPServerItem> GetAllFTPServers()
+        {
+            List<FTPServerItem> ftpServers = new List<FTPServerItem>();
+
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+
+                string sql = "SELECT * FROM FTPServers";
+
+                using (SQLiteCommand command = new SQLiteCommand(sql, connection))
+                using (SQLiteDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        FTPServerItem ftpServer = new FTPServerItem
+                        {
+                            Id = Convert.ToInt32(reader["Id"]),
+                            HostName = Convert.ToString(reader["Hostname"]),
+                            Username = Convert.ToString(reader["Username"]),
+                            Password = FTPOperations.DecryptAndDesaltPassword(Convert.ToString(reader["Password"]), Convert.ToString(reader["Salt"])),
+                            Salt = Convert.ToString(reader["Salt"]),
+                            SecurityMode = Convert.ToInt32(reader["SecurityMode"]),
+                            TransferMode = Convert.ToInt32(reader["TransferMode"])
+                        };
+
+                        ftpServers.Add(ftpServer);
+                    }
+                }
+            }
+
+            return ftpServers;
+        }
+
+        public static void DeleteFTPServer(int id)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+
+                string sql = "DELETE FROM FTPServers WHERE Id = @Id";
+
+                using (SQLiteCommand command = new SQLiteCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
 
     }
 }

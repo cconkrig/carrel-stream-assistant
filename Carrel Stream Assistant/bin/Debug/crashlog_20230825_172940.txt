@@ -1,0 +1,18 @@
+Date and Time: 8/25/2023 5:29:40 PM
+Exception Type: System.Data.SQLite.SQLiteException
+Message: SQL logic error
+near ",": syntax error
+Stack Trace:
+   at System.Data.SQLite.SQLite3.Prepare(SQLiteConnection cnn, SQLiteCommand command, String strSql, SQLiteStatement previous, UInt32 timeoutMS, String& strRemain)
+   at System.Data.SQLite.SQLiteCommand.BuildNextCommand()
+   at System.Data.SQLite.SQLiteCommand.GetStatement(Int32 index)
+   at System.Data.SQLite.SQLiteDataReader.NextResult()
+   at System.Data.SQLite.SQLiteDataReader..ctor(SQLiteCommand cmd, CommandBehavior behave)
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery()
+   at Carrel_Stream_Assistant.SchemaUpdater.UpdateToVersion4(SQLiteConnection connection) in C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\Classes\SchemaUpdater.cs:line 98
+   at Carrel_Stream_Assistant.DatabaseOperations.CheckDatabase() in C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\Shared Functions\DatabaseOperations.cs:line 28
+   at Carrel_Stream_Assistant.MainForm..ctor() in C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\MainForm.cs:line 48
+   at Carrel_Stream_Assistant.Program.Main() in C:\Users\cconk\source\repos\Carrel Stream Assistant\Carrel Stream Assistant\Program.cs:line 20
+----------------------------------------

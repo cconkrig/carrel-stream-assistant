@@ -85,6 +85,12 @@
     <Reference Include="NAudio.WinMM, Version=2.1.0.0, Culture=neutral, PublicKeyToken=e279aa5131008a41, processorArchitecture=MSIL">
       <HintPath>..\packages\NAudio.WinMM.2.1.0\lib\netstandard2.0\NAudio.WinMM.dll</HintPath>
     </Reference>
+    <Reference Include="Renci.SshNet, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
+      <HintPath>..\packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
+    </Reference>
+    <Reference Include="Renci.SshNet.Async, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Renci.SshNet.Async.1.4.0\lib\net40\Renci.SshNet.Async.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -96,6 +102,9 @@
     </Reference>
     <Reference Include="System.Data.SQLite.Linq, Version=1.0.118.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.118.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.FtpClient, Version=1.0.5824.34026, Culture=neutral, PublicKeyToken=fa4be07daa57c2b7, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.FtpClient.1.0.5824.34026\lib\net40\System.Net.FtpClient.dll</HintPath>
     </Reference>
     <Reference Include="System.Security.AccessControl, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.AccessControl.6.0.0\lib\net461\System.Security.AccessControl.dll</HintPath>
@@ -126,7 +135,21 @@
     <Compile Include="Classes\ColoredListBoxItem.cs" />
     <Compile Include="Classes\PlaybackQueueItem.cs" />
     <Compile Include="Classes\ReelItem.cs" />
+    <Compile Include="Classes\FTPServerItem.cs" />
     <Compile Include="Classes\SchemaUpdater.cs" />
+    <Compile Include="Classes\TerminalUpdateEventArgs.cs" />
+    <Compile Include="FormFTPOutput.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormFTPOutput.Designer.cs">
+      <DependentUpon>FormFTPOutput.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormFTPSetup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormFTPSetup.Designer.cs">
+      <DependentUpon>FormFTPSetup.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormReelToReel.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -150,10 +173,17 @@
     <Compile Include="Classes\NetCueItem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared Functions\FTPOperations.cs" />
     <Compile Include="Shared Functions\DatabaseOperations.cs" />
     <Compile Include="Shared Functions\CSAGraphics.cs" />
     <EmbeddedResource Include="AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormFTPOutput.resx">
+      <DependentUpon>FormFTPOutput.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormFTPSetup.resx">
+      <DependentUpon>FormFTPSetup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormReelToReel.resx">
       <DependentUpon>FormReelToReel.cs</DependentUpon>

@@ -11,6 +11,8 @@ namespace Carrel_Stream_Assistant
         public string StartCommand { get; set; }
         public string StopCommand { get; set; }
         public int MaxLengthSecs { get; set; }
+        public int FTPServerId { get; set; }
+        public string FTPPath { get; set; }
 
         // Override ToString to provide custom display text
         public override string ToString()
