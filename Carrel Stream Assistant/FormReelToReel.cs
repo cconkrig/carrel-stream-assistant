@@ -38,7 +38,7 @@ namespace Carrel_Stream_Assistant
                     cboRecFormat.SelectedIndex = editReelItem.Format;
                     txtFilename.Text = editReelItem.Filename;
                     txtStartCommand.Text = editReelItem.StartCommand;
-                    txtStopCommand.Text = editReelItem.StartCommand;
+                    txtStopCommand.Text = editReelItem.StopCommand;
                     txtMaxLengthSecs.Text = editReelItem.MaxLengthSecs.ToString();
                     // Set selected item based on ftpServerItem.id
                     for (int i = 0; i < cboFTPUpload.Items.Count; i++)
@@ -97,8 +97,8 @@ namespace Carrel_Stream_Assistant
             }
             if(txtFilename.Text.Trim() == "")
             {
-                MessageBox.Show("Please enter a Path with Filename. An example has been added for you...");
-                txtFilename.Text = "C:\\myaudio.m4a";
+                MessageBox.Show("Please enter a Path with filename, excluding the file extension. An example has been added for you...");
+                txtFilename.Text = "C:\\csa-audiofile";
                 return;
             }
             if (txtStartCommand.Text.Trim() == "")
@@ -142,10 +142,17 @@ namespace Carrel_Stream_Assistant
             
             if (ProcessFileName())
             {
-                // save into the db
-                DatabaseOperations.SaveReel(reelItem);
+                // Save into the db
+                DatabaseOperations.SaveReel(reelItem, () =>
+                {
+                    // Access the MainForm instance using the static variable
+                    MainForm mainForm = MainForm.Instance;
+                    if (mainForm != null)
+                    {
+                        DatabaseOperations.LoadReelToReelTableFromDatabase(mainForm.ReelToReelTable, mainForm);
+                    }
+                });
                 parentForm.LoadReelToReelScreen();
-                MessageBox.Show("Reel-to-Reel Recording Saved!");
                 Form currentForm = this;
                 currentForm.Close();
             }

@@ -5,12 +5,13 @@ using System.Net.Sockets;
 using System.Text;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Runtime.InteropServices;
+using System.Linq;
 using System.Windows.Forms;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Data.SQLite;
 using System.Collections.Generic;
 
@@ -21,6 +22,7 @@ namespace Carrel_Stream_Assistant
         public readonly static string databaseName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Cyber-Comp Technologies, LLC", "Carrel Stream Assistant", "stream_assist.db");
         private readonly static string connectionString = $"Data Source={databaseName};Version=3;";
         private readonly string logDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Cyber-Comp Technologies, LLC", "Carrel Stream Assistant", "log");
+        public static MainForm Instance { get; private set; }
         private readonly UdpClient udpClient;
         #pragma warning disable IDE0044 // Disable "Make field readonly" suggestion
         private IPAddress serverIpAddress;
@@ -41,10 +43,20 @@ namespace Carrel_Stream_Assistant
         private bool NetCueProcessingModeState = false;
         private MMDevice inputAudioDevice;
         private float audioFeedVolumeAtStartup = 0.0f;
+        internal System.Windows.Forms.Timer recBlinkTimer;
+        internal System.Windows.Forms.Timer recTimer;
+        internal DateTime startTime; // Store the start time of the recording
+        internal string currentReelToReelFilename;
+        // Define a List to store the ReelToReel table records
+        public List<ReelItem> ReelToReelTable { get; private set; } = new List<ReelItem>();
+        private int fadeCounter = 0;
+        private int fadeSteps = 10; // Number of steps for the fade
 
         public MainForm()
         {
             InitializeComponent();
+            // Assign the instance to the static variable
+            Instance = this;
             DatabaseOperations.CheckDatabase();
             PbPlaybackProgress.Maximum = 1000; // Set the maximum value (for percentage)
             PbPlaybackProgress2.Maximum = 1000; // Set the maximum value (for percentage)
@@ -56,11 +68,12 @@ namespace Carrel_Stream_Assistant
             PbPlaybackProgress2.MarqueeAnimationSpeed = 0;
             PbPlaybackProgress.ForeColor = Color.MediumPurple; // Adjust the color as needed
             PbPlaybackProgress2.ForeColor = Color.MediumPurple; // Adjust the color as needed
-                                                                // Set the DrawMode of the ListBox to OwnerDrawFixed
+            // Set the DrawMode of the ListBox to OwnerDrawFixed
             lstLog.DrawMode = DrawMode.OwnerDrawFixed;
             lstLog.DrawItem += LstLog_DrawItem;
-
             GeneralSettings settings = DatabaseOperations.GetGeneralSettingsFromDatabase();
+            // Load the ReelToReel table from the database into memory
+            DatabaseOperations.LoadReelToReelTableFromDatabase(ReelToReelTable, this);
             int netCuePort = settings.NetCuePort;
             string NetCueMode = settings.NetCueProcessingMode;
             serverIpAddress = GetLocalIPAddress();
@@ -73,11 +86,56 @@ namespace Carrel_Stream_Assistant
             AddLog($"Current Audio Feed Input Device volume is: {dB:F2} dB");
             TslblStatus.Text = $"Server: {serverIpAddress}:{netCuePort}";
             UpdateMode($"Mode: {NetCueMode}"); //make sure this comes last as we need the start-up line first.
+            recBlinkTimer = new System.Windows.Forms.Timer();
+            recBlinkTimer.Interval = 150; // 150 milliseconds blink frequency
+            recBlinkTimer.Tick += RecBlinkTimer_Tick;
+            recTimer = new System.Windows.Forms.Timer();
+            recTimer.Interval = 100; // 1000 milliseconds update frequency
+            recTimer.Tick += RecTimer_Tick;
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
 
+        }
+
+
+
+
+        private void RecBlinkTimer_Tick(object sender, EventArgs e)
+        {
+            fadeCounter++;
+            if (fadeCounter <= fadeSteps)
+            {
+                Color intermediateColor = CalculateIntermediateColor(SystemColors.AppWorkspace, Color.Red, fadeCounter, fadeSteps);
+                lblR2RStatus.ForeColor = intermediateColor;
+            }
+            else if (fadeCounter <= fadeSteps * 2) // Fading back to the default color
+            {
+                int reverseStep = fadeCounter - fadeSteps;
+                Color intermediateColor = CalculateIntermediateColor(Color.Red, SystemColors.AppWorkspace, reverseStep, fadeSteps);
+                lblR2RStatus.ForeColor = intermediateColor;
+            }
+            else
+            {
+                fadeCounter = 0; // Reset the fade counter for the next cycle
+            }
+
+        }
+
+        private Color CalculateIntermediateColor(Color startColor, Color endColor, int step, int totalSteps)
+        {
+            int r = (int)((endColor.R - startColor.R) * ((float)step / totalSteps) + startColor.R);
+            int g = (int)((endColor.G - startColor.G) * ((float)step / totalSteps) + startColor.G);
+            int b = (int)((endColor.B - startColor.B) * ((float)step / totalSteps) + startColor.B);
+
+            return Color.FromArgb(r, g, b);
+        }
+
+        private void RecTimer_Tick(object sender, EventArgs e)
+        {
+            // we inject the code from ReelToReelOperations
+            // need to keep this blank
         }
 
         private float GetAudioFeedVolume()
@@ -178,7 +236,7 @@ namespace Carrel_Stream_Assistant
                 AddLog($"Set Audio Feed Input Volume to: {dB:F2} dB");
             }catch (Exception)
             {
-                AddLog("Could not set volume, input device is missing.");
+                AddLog("Could not set volume, input device is missing. Please reset the input audio feed device in setup.");
             }
         }
 
@@ -191,12 +249,62 @@ namespace Carrel_Stream_Assistant
             // Update the listbox with the received text on the UI thread
             Invoke(new Action(() =>
             {
+                string raw_command = receivedText;
+                string[] startcommand_parts = receivedText.Split(new string[] { "::" }, StringSplitOptions.RemoveEmptyEntries);
+                if (startcommand_parts.Length > 1)
+                {
+                    receivedText = startcommand_parts[0]; //trim the filename off the dynamic cart so we can match on the command itself or the netcue.
+                }
+
+                // ============================================================================================
+                // Check for Record Start Command - we process these regardless of what mode we are in.
+                // Check if the receivedText matches StartCommand or StopCommand from the reelToReelTable Cache
+                // ============================================================================================
+                ReelItem matchingItem = ReelToReelTable.FirstOrDefault(item =>
+                    item.StartCommand.Equals(receivedText, StringComparison.OrdinalIgnoreCase) ||
+                    item.StopCommand.Equals(receivedText, StringComparison.OrdinalIgnoreCase));
+                if (matchingItem != null)
+                {
+                    if (matchingItem.StartCommand == receivedText)
+                    {
+                        if (recTimer.Enabled)
+                        {
+                            AddLog($"Reel-to-Reel Already Recording... Cannot start another record. Received: {receivedText}", Color.DeepPink);
+                            return;
+                        }
+                        else
+                        {
+                            // Call the function for start recording
+                            // dispatch as a task so the code doesn't get blocked.
+                            this.Invoke((Action)(async () => await ReelToReelOperations.StartReel(matchingItem, this, raw_command)));
+                            return;
+                        }
+                    }
+                    else if (matchingItem.StopCommand == receivedText)
+                    {
+                        if (!recTimer.Enabled)
+                        {
+                            AddLog($"Reel-to-Reel is not recording... Received: {receivedText}", Color.DeepPink);
+                            return;
+                        }
+                        else
+                        {
+                            // Call the function for stop recording
+                            AddLog($"Stopping Reel-to-Reel for: {currentReelToReelFilename} on Command: {matchingItem.StopCommand}");
+                            ReelToReelOperations.StopReel(this);
+                            return;
+                        }
+                    }
+                }
+                // ============================================================================================
+
                 // Check if we are in Always Processing Mode or Switched Mode
                 GeneralSettings settings = DatabaseOperations.GetGeneralSettingsFromDatabase();
                 string NetCueMode = settings.NetCueProcessingMode;
                 string StartNetCue = settings.NetCueStartCommand;
                 string StopNetCue = settings.NetCueStopCommand;
 
+                // Check for a NetCue and the processing mode we are in.
                 switch (NetCueMode)
                 {
                     case "Always Process Incoming NetCues":
@@ -302,7 +410,7 @@ namespace Carrel_Stream_Assistant
             }
         }
 
-        private void AddLog(string message, Color? foreColor = null, Color? backColor = null)
+        public void AddLog(string message, Color? foreColor = null, Color? backColor = null)
         {
             string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} :: {message}";
             if (lstLog.Items.Count >= maxLogEntries)
@@ -797,6 +905,7 @@ namespace Carrel_Stream_Assistant
             PbVuRight.Invalidate();
         }
 
+
         private void UpdatePlayer2VUMeters(float leftVolume, float rightVolume)
         {
             // Calculate the interpolation values based on the left and right volumes
@@ -825,6 +934,37 @@ namespace Carrel_Stream_Assistant
             PbVuLeft2.Invalidate();
             PbVuRight2.BackgroundImage = CSAGraphics.CreateGradientImage(rightBrush, rightInterpolationValue, PbVuRight2.Width, PbVuRight2.Height, middleColor);
             PbVuRight2.Invalidate();
+        }
+
+        public void UpdateRecVUMeters(float leftVolume, float rightVolume)
+        {
+            // Calculate the interpolation values based on the left and right volumes
+            float leftInterpolationValue = leftVolume;
+            float rightInterpolationValue = rightVolume;
+            // Define the start and end colors for the gradient
+            Color startColor = Color.Green;
+            Color middleColor = Color.Yellow;
+            Color endColor = Color.Red;
+            // Create a new LinearGradientBrush for left volume meter
+            LinearGradientBrush leftBrush = new LinearGradientBrush(
+                new Point(0, vuRecLeft.Height),
+                new Point(0, 0),
+                startColor,
+                endColor
+            );
+            // Create a new LinearGradientBrush for right volume meter
+            LinearGradientBrush rightBrush = new LinearGradientBrush(
+                new Point(0, vuRecRight.Height),
+                new Point(0, 0),
+                startColor,
+                endColor
+            );
+
+            // Set the PictureBox BackgroundImage property with the LinearGradientBrush
+            vuRecLeft.BackgroundImage = CSAGraphics.CreateGradientImage(leftBrush, leftInterpolationValue, vuRecLeft.Width, vuRecLeft.Height, middleColor);
+            vuRecLeft.Invalidate();
+            vuRecRight.BackgroundImage = CSAGraphics.CreateGradientImage(rightBrush, rightInterpolationValue, vuRecRight.Width, vuRecRight.Height, middleColor);
+            vuRecRight.Invalidate();
         }
 
         private void UpdatePlaybackTime(object state)
@@ -1085,6 +1225,22 @@ namespace Carrel_Stream_Assistant
         private void label8_Click(object sender, EventArgs e)
         {
 
+        }
+
+
+        private void volumeMeter1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnEmergencyStopRec_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BtnEmergencyStopRec_Click(object sender, EventArgs e)
+        {
+            ReelToReelOperations.StopReel(this, "Emergency");
         }
     }
 }

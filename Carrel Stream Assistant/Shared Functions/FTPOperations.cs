@@ -4,8 +4,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Net;
 using System.Drawing;
-using Renci.SshNet;
-using System.Net.FtpClient;
+using FluentFTP;
+using System.Windows.Forms;
 
 namespace Carrel_Stream_Assistant
 {
@@ -138,7 +138,7 @@ namespace Carrel_Stream_Assistant
                 if (ftpServer.SecurityMode == 0) // FTP
                 {
                     
-                    System.Net.FtpClient.FtpClient client = new System.Net.FtpClient.FtpClient();
+                    FtpClient client = new FtpClient();
                     string input = ftpServer.HostName;
                     string[] parts = input.Split(':');
                     string hostname = parts[0]; // Default hostname
@@ -150,15 +150,25 @@ namespace Carrel_Stream_Assistant
                     }
                     client.Host = hostname;
                     client.Credentials = new NetworkCredential(ftpServer.Username, ftpServer.Password);
-                    client.EncryptionMode = FtpEncryptionMode.None;
-                    UpdateTerminal($"> Connecting to {hostname} via FTP...");
+                    client.Config.EncryptionMode = FtpEncryptionMode.None;
+                    // Set the transfer mode based on the ftpServer.TransferMode setting
+                    if (ftpServer.TransferMode == 0)
+                    {
+                        UpdateTerminal($"> Connecting to {hostname} via FTP using PASSIVE mode...");
+                        client.Config.DataConnectionType = FtpDataConnectionType.AutoPassive;
+                    }
+                    else if (ftpServer.TransferMode == 1)
+                    {
+                        UpdateTerminal($"> Connecting to {hostname} via FTP using ACTIVE mode...");
+                        client.Config.DataConnectionType = FtpDataConnectionType.AutoActive;
+                    }
                     client.Connect();
                     UpdateTerminal($"> Connected to {hostname} via FTP using Username: {ftpServer.Username}", Color.Green);
                     return client;
                 }
                 else if (ftpServer.SecurityMode == 1) // FTPS
                 {
-                    System.Net.FtpClient.FtpClient client = new System.Net.FtpClient.FtpClient();
+                    FtpClient client = new FtpClient();
                     string input = ftpServer.HostName;
                     string[] parts = input.Split(':');
                     string hostname = parts[0]; // Default hostname
@@ -170,43 +180,13 @@ namespace Carrel_Stream_Assistant
                     }
                     client.Host = hostname;
                     client.Credentials = new NetworkCredential(ftpServer.Username, ftpServer.Password);
-                    client.EncryptionMode = FtpEncryptionMode.Explicit;
+                    client.Config.EncryptionMode = FtpEncryptionMode.Explicit;
 
                     client.ValidateCertificate += (sender, e) => { e.Accept = true; };
                     UpdateTerminal($"> Connecting to {hostname} via FTPS...");
                     client.Connect();
                     UpdateTerminal($"> Connected to {hostname} via FTPS using Username: {ftpServer.Username}", Color.Green);
                     return client;
-                }
-                else if (ftpServer.SecurityMode == 2) // SFTP
-                {
-                    ConnectionInfo connectionInfo = null;
-                    string input = ftpServer.HostName;
-                    string[] parts = input.Split(':');
-                    string hostname = parts[0]; // Default hostname
-                    if (parts.Length == 2)
-                    {
-                        string portStr = parts[1];
-                        connectionInfo = new ConnectionInfo(
-                            hostname,
-                            int.Parse(portStr),
-                            ftpServer.Username,
-                            new PasswordAuthenticationMethod(ftpServer.Username, ftpServer.Password)
-                        );
-                    } else
-                    {
-                        connectionInfo = new ConnectionInfo(
-                            hostname,
-                            ftpServer.Username,
-                            new PasswordAuthenticationMethod(ftpServer.Username, ftpServer.Password)
-                        );
-                    }
-
-                    Renci.SshNet.SftpClient sftpClient = new Renci.SshNet.SftpClient(connectionInfo);
-                    UpdateTerminal($"> Connecting to {hostname} via SFTP...");
-                    sftpClient.Connect();
-                    UpdateTerminal($"> Connected to {hostname} via SFTP using Username: {ftpServer.Username}", Color.Green);
-                    return sftpClient;
                 }
                 return null;
             }
@@ -225,7 +205,7 @@ namespace Carrel_Stream_Assistant
             {
                 try
                 {
-                    // Perform FTP/SFTP operations using the dynamic object
+                    // Perform FTP/FTPS operations using the dynamic object
                     using (ftpClient)
                     {
                         string guid = Path.GetRandomFileName().Replace(".", "");
@@ -250,39 +230,19 @@ namespace Carrel_Stream_Assistant
 
                         UpdateTerminal($"> Removing {testFilename} from /");
 
-                        if (ftpServer.SecurityMode == 2) // SFTP
+                        try
                         {
-                            // Check if the delete was successful
-                            try
-                            {
-                                // Attempt to delete the file
-                                ftpClient.DeleteFile("/" + testFilename);
-                                UpdateTerminal($"> Removed {testFilename}.", Color.Green);
-                                return true;
-                            }
-                            catch (Exception e)
-                            {
-                                UpdateTerminal($"> Failed to remove {testFilename}. This could be lack of permissions, please delete the file manually.", Color.Red);
-                                UpdateTerminal($"> {e.Message}", Color.Red);
-                                return false;
-                            }
+                            // Attempt to delete the file
+                            ftpClient.SetWorkingDirectory("/");
+                            ftpClient.DeleteFile(testFilename);
+                            UpdateTerminal($"> Removed {testFilename}.", Color.Green);
+                            return true;
                         }
-                        else // FTP and FTPS
+                        catch (Exception e)
                         {
-                            try
-                            {
-                                // Attempt to delete the file
-                                ftpClient.SetWorkingDirectory("/");
-                                ftpClient.DeleteFile(testFilename);
-                                UpdateTerminal($"> Removed {testFilename}.", Color.Green);
-                                return true;
-                            }
-                            catch (Exception e)
-                            {
-                                UpdateTerminal($"> Failed to remove {testFilename}. This could be lack of permissions, please delete the file manually.", Color.Red);
-                                UpdateTerminal($"> {e.Message}", Color.Red);
-                                return false;
-                            }
+                            UpdateTerminal($"> Failed to remove {testFilename}. This could be lack of permissions, please delete the file manually.", Color.Red);
+                            UpdateTerminal($"> {e.Message}", Color.Red);
+                            return false;
                         }
                     }
                 }
@@ -294,6 +254,57 @@ namespace Carrel_Stream_Assistant
                 }
             }
 
+            return false;
+        }
+
+        public static bool UploadFile(FTPServerItem ftpServer, ReelItem reelItem, string filename_to_upload = null, dynamic parent = null)
+        {
+            dynamic ftpClient = ConnectToFTP(ftpServer);
+            if (ftpClient != null)
+            {
+                try
+                {
+                    // Perform FTP/FTPS operations using the dynamic object
+                    using (ftpClient)
+                    {
+                        UpdateTerminal($"> Setting working directory: {reelItem.FTPPath}");
+                        ftpClient.SetWorkingDirectory($"{reelItem.FTPPath}");
+                        parent.progressUpload.Visible = true;
+                        UpdateTerminal($"> Uploading {filename_to_upload}...");
+
+                        // Extract the filename from the full path
+                        string filename = Path.GetFileName(filename_to_upload);
+                        using (var stream = ftpClient.OpenWrite(filename))
+                        {
+                            using (var fileStream = File.OpenRead(filename_to_upload))
+                            {
+                                byte[] buffer = new byte[4096]; // Buffer size for reading the file
+                                int bytesRead;
+                                long totalBytes = fileStream.Length;
+                                long uploadedBytes = 0;
+
+                                while ((bytesRead = fileStream.Read(buffer, 0, buffer.Length)) > 0)
+                                {
+                                    stream.Write(buffer, 0, bytesRead);
+                                    uploadedBytes += bytesRead;
+
+                                    // Update the progress bar
+                                    int progressPercentage = (int)((float)uploadedBytes / totalBytes * 100);
+                                    parent.progressUpload.Value = progressPercentage;
+                                }
+                            }
+                        }
+                    }
+                    UpdateTerminal($"> Upload Finished!");
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    UpdateTerminal($"> UPLOAD FAILED.", Color.Red);
+                    UpdateTerminal($"> {e.Message}", Color.Red);
+                    return false;
+                }
+            }
             return false;
         }
 

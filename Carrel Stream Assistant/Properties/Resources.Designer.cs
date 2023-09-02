@@ -59,5 +59,15 @@ namespace Carrel_Stream_Assistant.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap reel_to_reel_animation {
+            get {
+                object obj = ResourceManager.GetObject("reel-to-reel-animation", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

@@ -190,8 +190,7 @@ namespace Carrel_Stream_Assistant
             this.cboSecurity.FormattingEnabled = true;
             this.cboSecurity.Items.AddRange(new object[] {
             "No Security (Clear Text - Stand FTP - Default Setting)",
-            "FTPS (FTP Secure)",
-            "SFTP (SSH FTP)"});
+            "FTPS (FTP Secure)"});
             this.cboSecurity.Location = new System.Drawing.Point(140, 208);
             this.cboSecurity.Name = "cboSecurity";
             this.cboSecurity.Size = new System.Drawing.Size(367, 24);

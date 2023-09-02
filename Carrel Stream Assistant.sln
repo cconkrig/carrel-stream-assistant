@@ -1,15 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.33927.289
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carrel Stream Assistant", "Carrel Stream Assistant\Carrel Stream Assistant.csproj", "{FFD855BD-D954-4B20-B584-178CEBB97D94}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D912746B-EA1E-4ABD-BD05-899E1410F0A5}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Carrel Stream Assistant Setup", "Carrel Stream Assistant Setup\Carrel Stream Assistant Setup.vdproj", "{7562E744-3BE3-45F8-A191-EC2AFD8FA6C8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carrel Stream Assistant Custom Controls Library", "Carrel Stream Assistant Custom Controls Library\Carrel Stream Assistant Custom Controls Library.csproj", "{E9A670CE-94ED-4CF5-B6DD-04ECD8B8AE61}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Carrel Stream Assistant Setup", "Carrel Stream Assistant Setup\Carrel Stream Assistant Setup.vdproj", "{9C0E7453-21E0-41BA-9482-EE198715C603}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,13 +21,13 @@ Global
 		{FFD855BD-D954-4B20-B584-178CEBB97D94}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFD855BD-D954-4B20-B584-178CEBB97D94}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFD855BD-D954-4B20-B584-178CEBB97D94}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7562E744-3BE3-45F8-A191-EC2AFD8FA6C8}.Debug|Any CPU.ActiveCfg = Debug
-		{7562E744-3BE3-45F8-A191-EC2AFD8FA6C8}.Release|Any CPU.ActiveCfg = Release
-		{7562E744-3BE3-45F8-A191-EC2AFD8FA6C8}.Release|Any CPU.Build.0 = Release
 		{E9A670CE-94ED-4CF5-B6DD-04ECD8B8AE61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E9A670CE-94ED-4CF5-B6DD-04ECD8B8AE61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9A670CE-94ED-4CF5-B6DD-04ECD8B8AE61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9A670CE-94ED-4CF5-B6DD-04ECD8B8AE61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C0E7453-21E0-41BA-9482-EE198715C603}.Debug|Any CPU.ActiveCfg = Debug
+		{9C0E7453-21E0-41BA-9482-EE198715C603}.Release|Any CPU.ActiveCfg = Release
+		{9C0E7453-21E0-41BA-9482-EE198715C603}.Release|Any CPU.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

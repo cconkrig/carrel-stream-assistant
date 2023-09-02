@@ -47,9 +47,9 @@ namespace Carrel_Stream_Assistant
             this.label10 = new System.Windows.Forms.Label();
             this.cboRecFormat = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.cboFTPUpload = new System.Windows.Forms.ComboBox();
-            this.lblRootPath = new System.Windows.Forms.Label();
             this.txtFTPRootPath = new System.Windows.Forms.TextBox();
+            this.lblRootPath = new System.Windows.Forms.Label();
+            this.cboFTPUpload = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -181,9 +181,9 @@ namespace Carrel_Stream_Assistant
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(17, 160);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(88, 13);
+            this.label8.Size = new System.Drawing.Size(78, 13);
             this.label8.TabIndex = 13;
-            this.label8.Text = "{time} = HHmmss";
+            this.label8.Text = "{time} = HHmm";
             // 
             // label9
             // 
@@ -211,10 +211,9 @@ namespace Carrel_Stream_Assistant
             this.cboRecFormat.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboRecFormat.FormattingEnabled = true;
             this.cboRecFormat.Items.AddRange(new object[] {
-            "HE-AAC, 44100Hz, Stereo, 30Kbps (DEFAULT)",
-            "HE-AAC v2, 44100Hz, Stereo, 30Kbps",
-            "MP3, 44100Hz, Stereo, 128Kbps",
-            "WAV, 44100Hz, Stereo, 16-bit"});
+            "AAC (DEFAULT)",
+            "MP3",
+            "WAV"});
             this.cboRecFormat.Location = new System.Drawing.Point(118, 32);
             this.cboRecFormat.Name = "cboRecFormat";
             this.cboRecFormat.Size = new System.Drawing.Size(303, 24);
@@ -233,6 +232,23 @@ namespace Carrel_Stream_Assistant
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Automatic FTP Upload";
             // 
+            // txtFTPRootPath
+            // 
+            this.txtFTPRootPath.Enabled = false;
+            this.txtFTPRootPath.Location = new System.Drawing.Point(16, 83);
+            this.txtFTPRootPath.Name = "txtFTPRootPath";
+            this.txtFTPRootPath.Size = new System.Drawing.Size(371, 22);
+            this.txtFTPRootPath.TabIndex = 2;
+            // 
+            // lblRootPath
+            // 
+            this.lblRootPath.AutoSize = true;
+            this.lblRootPath.Location = new System.Drawing.Point(13, 64);
+            this.lblRootPath.Name = "lblRootPath";
+            this.lblRootPath.Size = new System.Drawing.Size(196, 16);
+            this.lblRootPath.TabIndex = 1;
+            this.lblRootPath.Text = "Root Path for Upload (usually /):";
+            // 
             // cboFTPUpload
             // 
             this.cboFTPUpload.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -244,23 +260,6 @@ namespace Carrel_Stream_Assistant
             this.cboFTPUpload.Size = new System.Drawing.Size(371, 24);
             this.cboFTPUpload.TabIndex = 0;
             this.cboFTPUpload.SelectedIndexChanged += new System.EventHandler(this.CboFTPUpload_SelectedIndexChanged);
-            // 
-            // lblRootPath
-            // 
-            this.lblRootPath.AutoSize = true;
-            this.lblRootPath.Location = new System.Drawing.Point(13, 64);
-            this.lblRootPath.Name = "lblRootPath";
-            this.lblRootPath.Size = new System.Drawing.Size(196, 16);
-            this.lblRootPath.TabIndex = 1;
-            this.lblRootPath.Text = "Root Path for Upload (usually /):";
-            // 
-            // txtFTPRootPath
-            // 
-            this.txtFTPRootPath.Enabled = false;
-            this.txtFTPRootPath.Location = new System.Drawing.Point(16, 83);
-            this.txtFTPRootPath.Name = "txtFTPRootPath";
-            this.txtFTPRootPath.Size = new System.Drawing.Size(371, 22);
-            this.txtFTPRootPath.TabIndex = 2;
             // 
             // FormReelToReel
             // 

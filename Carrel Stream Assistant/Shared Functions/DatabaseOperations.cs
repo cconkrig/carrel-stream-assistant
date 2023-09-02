@@ -271,51 +271,53 @@ namespace Carrel_Stream_Assistant
             }
         }
 
-        public static void SaveReel(ReelItem reelItem)
+        public static void SaveReel(ReelItem reelItem, Action cacheRefreshCallback)
         {
-            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
-            {
-                connection.Open();
-
-                if (reelItem.Id == 0)
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
-                    // Insert a new record
-                    string insertQuery = "INSERT INTO ReelToReel (Format, Filename, StartCommand, StopCommand, MaxLengthSecs, FTPServerId, FTPPath) " +
-                                         "VALUES (@Format, @Filename, @StartCommand, @StopCommand, @MaxLengthSecs, @FTPServerId, @FTPPath)";
+                    connection.Open();
 
-                    using (SQLiteCommand command = new SQLiteCommand(insertQuery, connection))
+                    if (reelItem.Id == 0)
                     {
-                        command.Parameters.AddWithValue("@Format", reelItem.Format);
-                        command.Parameters.AddWithValue("@Filename", reelItem.Filename);
-                        command.Parameters.AddWithValue("@StartCommand", reelItem.StartCommand);
-                        command.Parameters.AddWithValue("@StopCommand", reelItem.StopCommand);
-                        command.Parameters.AddWithValue("@MaxLengthSecs", reelItem.MaxLengthSecs);
-                        command.Parameters.AddWithValue("@FTPServerId", reelItem.FTPServerId);
-                        command.Parameters.AddWithValue("@FTPPath", reelItem.FTPPath);
-                        command.ExecuteNonQuery(); // Execute the INSERT query
-                    }
-                }
-                else
-                {
-                    // Update an existing record
-                    string updateQuery = "UPDATE ReelToReel SET Format = @Format, Filename = @Filename, StartCommand = @StartCommand, " +
-                                         "StopCommand = @StopCommand, MaxLengthSecs = @MaxLengthSecs, FTPServerId = @FTPServerId, FTPPath = @FTPPath WHERE Id = @Id";
+                        // Insert a new record
+                        string insertQuery = "INSERT INTO ReelToReel (Format, Filename, StartCommand, StopCommand, MaxLengthSecs, FTPServerId, FTPPath) " +
+                                             "VALUES (@Format, @Filename, @StartCommand, @StopCommand, @MaxLengthSecs, @FTPServerId, @FTPPath)";
 
-                    using (SQLiteCommand command = new SQLiteCommand(updateQuery, connection))
+                        using (SQLiteCommand command = new SQLiteCommand(insertQuery, connection))
+                        {
+                            command.Parameters.AddWithValue("@Format", reelItem.Format);
+                            command.Parameters.AddWithValue("@Filename", reelItem.Filename);
+                            command.Parameters.AddWithValue("@StartCommand", reelItem.StartCommand);
+                            command.Parameters.AddWithValue("@StopCommand", reelItem.StopCommand);
+                            command.Parameters.AddWithValue("@MaxLengthSecs", reelItem.MaxLengthSecs);
+                            command.Parameters.AddWithValue("@FTPServerId", reelItem.FTPServerId);
+                            command.Parameters.AddWithValue("@FTPPath", reelItem.FTPPath);
+                            command.ExecuteNonQuery(); // Execute the INSERT query
+                        }
+                    }
+                    else
                     {
-                        command.Parameters.AddWithValue("@Format", reelItem.Format);
-                        command.Parameters.AddWithValue("@Filename", reelItem.Filename);
-                        command.Parameters.AddWithValue("@StartCommand", reelItem.StartCommand);
-                        command.Parameters.AddWithValue("@StopCommand", reelItem.StopCommand);
-                        command.Parameters.AddWithValue("@MaxLengthSecs", reelItem.MaxLengthSecs);
-                        command.Parameters.AddWithValue("@FTPServerId", reelItem.FTPServerId);
-                        command.Parameters.AddWithValue("@FTPPath", reelItem.FTPPath);
+                        // Update an existing record
+                        string updateQuery = "UPDATE ReelToReel SET Format = @Format, Filename = @Filename, StartCommand = @StartCommand, " +
+                                             "StopCommand = @StopCommand, MaxLengthSecs = @MaxLengthSecs, FTPServerId = @FTPServerId, FTPPath = @FTPPath WHERE Id = @Id";
 
-                        command.Parameters.AddWithValue("@Id", reelItem.Id);
+                        using (SQLiteCommand command = new SQLiteCommand(updateQuery, connection))
+                        {
+                            command.Parameters.AddWithValue("@Format", reelItem.Format);
+                            command.Parameters.AddWithValue("@Filename", reelItem.Filename);
+                            command.Parameters.AddWithValue("@StartCommand", reelItem.StartCommand);
+                            command.Parameters.AddWithValue("@StopCommand", reelItem.StopCommand);
+                            command.Parameters.AddWithValue("@MaxLengthSecs", reelItem.MaxLengthSecs);
+                            command.Parameters.AddWithValue("@FTPServerId", reelItem.FTPServerId);
+                            command.Parameters.AddWithValue("@FTPPath", reelItem.FTPPath);
 
-                        command.ExecuteNonQuery(); // Execute the UPDATE query
+                            command.Parameters.AddWithValue("@Id", reelItem.Id);
+
+                            command.ExecuteNonQuery(); // Execute the UPDATE query
+                        }
                     }
-                }
+                // Invoke the cacheRefreshCallback after save operation
+                cacheRefreshCallback?.Invoke();
             }
         }
 
@@ -364,7 +366,7 @@ namespace Carrel_Stream_Assistant
                           Password = @Password, 
                           Salt = @Salt, 
                           SecurityMode = @SecurityMode, 
-                          TransferMode = @TransferMode, 
+                          TransferMode = @TransferMode 
                       WHERE Id = @Id";
 
             using (SQLiteCommand command = new SQLiteCommand(sql, connection))
@@ -469,6 +471,37 @@ namespace Carrel_Stream_Assistant
             }
         }
 
+        public static void LoadReelToReelTableFromDatabase(List<ReelItem> reelToReelTable, MainForm mainForm)
+        {
+            // Clear the existing reelToReelTable if it's provided
+            mainForm.ReelToReelTable.Clear();
+
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+                // Create a command to select all records from the ReelToReel table
+                string query = "SELECT * FROM ReelToReel";
+                SQLiteCommand command = new SQLiteCommand(query, connection);
+                using (SQLiteDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        ReelItem reelItem = new ReelItem()
+                        {
+                            Id = Convert.ToInt32(reader["Id"]),
+                            Format = Convert.ToInt32(reader["Format"]),
+                            Filename = Convert.ToString(reader["Filename"]),
+                            StartCommand = Convert.ToString(reader["StartCommand"]),
+                            StopCommand = Convert.ToString(reader["StopCommand"]),
+                            MaxLengthSecs = Convert.ToInt32(reader["MaxLengthSecs"]),
+                            FTPServerId = Convert.ToInt32(reader["FTPServerId"]),
+                            FTPPath = Convert.ToString(reader["FTPPath"])
+                        };
+                        mainForm.ReelToReelTable.Add(reelItem);
+                    }
+                }
+            }
+        }
 
     }
 }

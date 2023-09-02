@@ -44,7 +44,6 @@ namespace Carrel_Stream_Assistant
             this.TslblStartStop = new System.Windows.Forms.ToolStripStatusLabel();
             this.BtnStopPlayback = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.PbPlaybackProgress = new Carrel_Stream_Assistant.NewProgressBar();
             this.LabelPlayer1Muted = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.LabelPlayer1Filename = new System.Windows.Forms.Label();
@@ -59,7 +58,6 @@ namespace Carrel_Stream_Assistant
             this.btnClearQueue = new System.Windows.Forms.Button();
             this.BtnStopandClear = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.PbPlaybackProgress2 = new Carrel_Stream_Assistant.NewProgressBar();
             this.LabelPlayer2Muted = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.LabelPlayer2Filename = new System.Windows.Forms.Label();
@@ -72,19 +70,20 @@ namespace Carrel_Stream_Assistant
             this.restoreWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitApplicationStopServiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.lblR2RStatus = new System.Windows.Forms.Label();
-            this.lblR2RTimeElapsed = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.lblR2RFileName = new System.Windows.Forms.Label();
+            this.vuRecRight = new NAudio.Gui.VolumeMeter();
+            this.vuRecLeft = new NAudio.Gui.VolumeMeter();
+            this.pbReelToReel = new System.Windows.Forms.PictureBox();
+            this.btnEmergencyStopRec = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.lblR2RMaxTime = new System.Windows.Forms.Label();
-            this.lblR2RUpload = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.lblR2RFileName = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.lblR2RTimeElapsed = new System.Windows.Forms.Label();
+            this.lblR2RStatus = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.PbPlaybackProgress2 = new Carrel_Stream_Assistant.NewProgressBar();
+            this.PbPlaybackProgress = new Carrel_Stream_Assistant.NewProgressBar();
             this.menuStrip1.SuspendLayout();
             this.statusBar.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -95,20 +94,19 @@ namespace Carrel_Stream_Assistant
             ((System.ComponentModel.ISupportInitialize)(this.PbVuLeft2)).BeginInit();
             this.NotifyIconContext.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbReelToReel)).BeginInit();
             this.SuspendLayout();
             // 
             // lstLog
             // 
-            this.lstLog.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lstLog.Font = new System.Drawing.Font("Cascadia Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lstLog.FormattingEnabled = true;
             this.lstLog.HorizontalScrollbar = true;
-            this.lstLog.ItemHeight = 16;
+            this.lstLog.ItemHeight = 15;
             this.lstLog.Location = new System.Drawing.Point(12, 452);
             this.lstLog.Name = "lstLog";
             this.lstLog.ScrollAlwaysVisible = true;
-            this.lstLog.Size = new System.Drawing.Size(818, 132);
+            this.lstLog.Size = new System.Drawing.Size(818, 124);
             this.lstLog.TabIndex = 0;
             // 
             // menuStrip1
@@ -118,7 +116,7 @@ namespace Carrel_Stream_Assistant
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1171, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1119, 24);
             this.menuStrip1.TabIndex = 3;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -152,7 +150,7 @@ namespace Carrel_Stream_Assistant
             this.TslblStartStop});
             this.statusBar.Location = new System.Drawing.Point(0, 587);
             this.statusBar.Name = "statusBar";
-            this.statusBar.Size = new System.Drawing.Size(1171, 22);
+            this.statusBar.Size = new System.Drawing.Size(1119, 22);
             this.statusBar.TabIndex = 4;
             this.statusBar.Text = "statusStrip1";
             // 
@@ -166,7 +164,7 @@ namespace Carrel_Stream_Assistant
             // 
             this.TslblMode.Name = "TslblMode";
             this.TslblMode.Padding = new System.Windows.Forms.Padding(0, 0, 50, 0);
-            this.TslblMode.Size = new System.Drawing.Size(1113, 17);
+            this.TslblMode.Size = new System.Drawing.Size(1061, 17);
             this.TslblMode.Spring = true;
             this.TslblMode.Text = "Mode";
             // 
@@ -179,9 +177,10 @@ namespace Carrel_Stream_Assistant
             // 
             // BtnStopPlayback
             // 
-            this.BtnStopPlayback.BackColor = System.Drawing.Color.Navy;
+            this.BtnStopPlayback.BackColor = System.Drawing.SystemColors.Control;
+            this.BtnStopPlayback.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.BtnStopPlayback.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BtnStopPlayback.ForeColor = System.Drawing.Color.White;
+            this.BtnStopPlayback.ForeColor = System.Drawing.SystemColors.ControlText;
             this.BtnStopPlayback.Location = new System.Drawing.Point(639, 54);
             this.BtnStopPlayback.Name = "BtnStopPlayback";
             this.BtnStopPlayback.Size = new System.Drawing.Size(191, 75);
@@ -208,13 +207,6 @@ namespace Carrel_Stream_Assistant
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Audio Player 1";
             // 
-            // PbPlaybackProgress
-            // 
-            this.PbPlaybackProgress.Location = new System.Drawing.Point(50, 89);
-            this.PbPlaybackProgress.Name = "PbPlaybackProgress";
-            this.PbPlaybackProgress.Size = new System.Drawing.Size(521, 22);
-            this.PbPlaybackProgress.TabIndex = 9;
-            // 
             // LabelPlayer1Muted
             // 
             this.LabelPlayer1Muted.AutoSize = true;
@@ -229,7 +221,7 @@ namespace Carrel_Stream_Assistant
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(47, 63);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(102, 16);
+            this.label3.Size = new System.Drawing.Size(101, 16);
             this.label3.TabIndex = 7;
             this.label3.Text = "Muted Output:";
             // 
@@ -247,7 +239,7 @@ namespace Carrel_Stream_Assistant
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(47, 26);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(85, 16);
+            this.label1.Size = new System.Drawing.Size(84, 16);
             this.label1.TabIndex = 2;
             this.label1.Text = "Cart Name:";
             // 
@@ -300,7 +292,7 @@ namespace Carrel_Stream_Assistant
             this.lblLog.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLog.Location = new System.Drawing.Point(12, 434);
             this.lblLog.Name = "lblLog";
-            this.lblLog.Size = new System.Drawing.Size(57, 16);
+            this.lblLog.Size = new System.Drawing.Size(56, 16);
             this.lblLog.TabIndex = 10;
             this.lblLog.Text = "History";
             // 
@@ -310,13 +302,14 @@ namespace Carrel_Stream_Assistant
             this.lblQueue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblQueue.Location = new System.Drawing.Point(12, 333);
             this.lblQueue.Name = "lblQueue";
-            this.lblQueue.Size = new System.Drawing.Size(122, 16);
+            this.lblQueue.Size = new System.Drawing.Size(121, 16);
             this.lblQueue.TabIndex = 11;
             this.lblQueue.Text = "Playback Queue";
             // 
             // btnClearQueue
             // 
-            this.btnClearQueue.BackColor = System.Drawing.Color.Orange;
+            this.btnClearQueue.BackColor = System.Drawing.SystemColors.Control;
+            this.btnClearQueue.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnClearQueue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClearQueue.Location = new System.Drawing.Point(639, 145);
             this.btnClearQueue.Name = "btnClearQueue";
@@ -328,9 +321,10 @@ namespace Carrel_Stream_Assistant
             // 
             // BtnStopandClear
             // 
-            this.BtnStopandClear.BackColor = System.Drawing.Color.Red;
+            this.BtnStopandClear.BackColor = System.Drawing.SystemColors.Control;
+            this.BtnStopandClear.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.BtnStopandClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BtnStopandClear.ForeColor = System.Drawing.Color.White;
+            this.BtnStopandClear.ForeColor = System.Drawing.SystemColors.ControlText;
             this.BtnStopandClear.Location = new System.Drawing.Point(639, 237);
             this.BtnStopandClear.Name = "BtnStopandClear";
             this.BtnStopandClear.Size = new System.Drawing.Size(191, 75);
@@ -357,13 +351,6 @@ namespace Carrel_Stream_Assistant
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Audio Player 2";
             // 
-            // PbPlaybackProgress2
-            // 
-            this.PbPlaybackProgress2.Location = new System.Drawing.Point(50, 90);
-            this.PbPlaybackProgress2.Name = "PbPlaybackProgress2";
-            this.PbPlaybackProgress2.Size = new System.Drawing.Size(518, 22);
-            this.PbPlaybackProgress2.TabIndex = 11;
-            // 
             // LabelPlayer2Muted
             // 
             this.LabelPlayer2Muted.AutoSize = true;
@@ -378,7 +365,7 @@ namespace Carrel_Stream_Assistant
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(47, 63);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(102, 16);
+            this.label4.Size = new System.Drawing.Size(101, 16);
             this.label4.TabIndex = 7;
             this.label4.Text = "Muted Output:";
             // 
@@ -396,7 +383,7 @@ namespace Carrel_Stream_Assistant
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(47, 26);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(85, 16);
+            this.label6.Size = new System.Drawing.Size(84, 16);
             this.label6.TabIndex = 2;
             this.label6.Text = "Cart Name:";
             // 
@@ -465,11 +452,10 @@ namespace Carrel_Stream_Assistant
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.button1);
-            this.groupBox3.Controls.Add(this.pictureBox2);
-            this.groupBox3.Controls.Add(this.pictureBox1);
-            this.groupBox3.Controls.Add(this.lblR2RUpload);
-            this.groupBox3.Controls.Add(this.label13);
+            this.groupBox3.Controls.Add(this.vuRecRight);
+            this.groupBox3.Controls.Add(this.vuRecLeft);
+            this.groupBox3.Controls.Add(this.pbReelToReel);
+            this.groupBox3.Controls.Add(this.btnEmergencyStopRec);
             this.groupBox3.Controls.Add(this.label10);
             this.groupBox3.Controls.Add(this.lblR2RMaxTime);
             this.groupBox3.Controls.Add(this.lblR2RFileName);
@@ -481,86 +467,70 @@ namespace Carrel_Stream_Assistant
             this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox3.Location = new System.Drawing.Point(870, 51);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(289, 533);
+            this.groupBox3.Size = new System.Drawing.Size(236, 533);
             this.groupBox3.TabIndex = 14;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Reel-to-Reel";
             // 
-            // label2
+            // vuRecRight
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(14, 45);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(55, 16);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Status:";
+            this.vuRecRight.Amplitude = 0F;
+            this.vuRecRight.Location = new System.Drawing.Point(180, 422);
+            this.vuRecRight.MaxDb = 18F;
+            this.vuRecRight.MinDb = -60F;
+            this.vuRecRight.Name = "vuRecRight";
+            this.vuRecRight.Size = new System.Drawing.Size(28, 88);
+            this.vuRecRight.TabIndex = 18;
+            this.vuRecRight.Text = "volumeMeter2";
+            this.vuRecRight.Visible = false;
             // 
-            // lblR2RStatus
+            // vuRecLeft
             // 
-            this.lblR2RStatus.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.lblR2RStatus.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblR2RStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblR2RStatus.ForeColor = System.Drawing.Color.DimGray;
-            this.lblR2RStatus.Location = new System.Drawing.Point(17, 69);
-            this.lblR2RStatus.Name = "lblR2RStatus";
-            this.lblR2RStatus.Size = new System.Drawing.Size(206, 63);
-            this.lblR2RStatus.TabIndex = 1;
-            this.lblR2RStatus.Text = "Idle";
-            this.lblR2RStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.vuRecLeft.Amplitude = 0F;
+            this.vuRecLeft.Location = new System.Drawing.Point(146, 422);
+            this.vuRecLeft.MaxDb = 18F;
+            this.vuRecLeft.MinDb = -60F;
+            this.vuRecLeft.Name = "vuRecLeft";
+            this.vuRecLeft.Size = new System.Drawing.Size(28, 88);
+            this.vuRecLeft.TabIndex = 17;
+            this.vuRecLeft.Text = "volumeMeter1";
+            this.vuRecLeft.Visible = false;
+            this.vuRecLeft.Click += new System.EventHandler(this.volumeMeter1_Click);
             // 
-            // lblR2RTimeElapsed
+            // pbReelToReel
             // 
-            this.lblR2RTimeElapsed.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.lblR2RTimeElapsed.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblR2RTimeElapsed.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblR2RTimeElapsed.ForeColor = System.Drawing.SystemColors.ScrollBar;
-            this.lblR2RTimeElapsed.Location = new System.Drawing.Point(17, 201);
-            this.lblR2RTimeElapsed.Name = "lblR2RTimeElapsed";
-            this.lblR2RTimeElapsed.Size = new System.Drawing.Size(207, 58);
-            this.lblR2RTimeElapsed.TabIndex = 2;
-            this.lblR2RTimeElapsed.Text = "00:00:00";
-            this.lblR2RTimeElapsed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.pbReelToReel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbReelToReel.Image = global::Carrel_Stream_Assistant.Properties.Resources.reel_to_reel_animation;
+            this.pbReelToReel.Location = new System.Drawing.Point(21, 422);
+            this.pbReelToReel.Name = "pbReelToReel";
+            this.pbReelToReel.Size = new System.Drawing.Size(118, 88);
+            this.pbReelToReel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbReelToReel.TabIndex = 13;
+            this.pbReelToReel.TabStop = false;
+            this.pbReelToReel.Visible = false;
+            this.pbReelToReel.WaitOnLoad = true;
             // 
-            // label7
+            // btnEmergencyStopRec
             // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(15, 180);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(185, 16);
-            this.label7.TabIndex = 3;
-            this.label7.Text = "Recording Time Elapsed:";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(14, 401);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(124, 16);
-            this.label8.TabIndex = 4;
-            this.label8.Text = "Output Filename:";
-            this.label8.Click += new System.EventHandler(this.label8_Click);
-            // 
-            // lblR2RFileName
-            // 
-            this.lblR2RFileName.AutoEllipsis = true;
-            this.lblR2RFileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblR2RFileName.ForeColor = System.Drawing.Color.DarkViolet;
-            this.lblR2RFileName.Location = new System.Drawing.Point(14, 424);
-            this.lblR2RFileName.Name = "lblR2RFileName";
-            this.lblR2RFileName.Size = new System.Drawing.Size(203, 23);
-            this.lblR2RFileName.TabIndex = 5;
-            this.lblR2RFileName.Click += new System.EventHandler(this.label9_Click);
+            this.btnEmergencyStopRec.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.btnEmergencyStopRec.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnEmergencyStopRec.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEmergencyStopRec.Location = new System.Drawing.Point(17, 120);
+            this.btnEmergencyStopRec.Name = "btnEmergencyStopRec";
+            this.btnEmergencyStopRec.Size = new System.Drawing.Size(206, 30);
+            this.btnEmergencyStopRec.TabIndex = 12;
+            this.btnEmergencyStopRec.Text = "Stop Recording";
+            this.btnEmergencyStopRec.UseVisualStyleBackColor = false;
+            this.btnEmergencyStopRec.Visible = false;
+            this.btnEmergencyStopRec.Click += new System.EventHandler(this.BtnEmergencyStopRec_Click);
             // 
             // label10
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(14, 290);
+            this.label10.Location = new System.Drawing.Point(15, 266);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(193, 16);
+            this.label10.Size = new System.Drawing.Size(192, 16);
             this.label10.TabIndex = 7;
             this.label10.Text = "Maximum Time Remaining:";
             // 
@@ -570,73 +540,100 @@ namespace Carrel_Stream_Assistant
             this.lblR2RMaxTime.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblR2RMaxTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblR2RMaxTime.ForeColor = System.Drawing.SystemColors.ScrollBar;
-            this.lblR2RMaxTime.Location = new System.Drawing.Point(17, 311);
+            this.lblR2RMaxTime.Location = new System.Drawing.Point(18, 293);
             this.lblR2RMaxTime.Name = "lblR2RMaxTime";
-            this.lblR2RMaxTime.Size = new System.Drawing.Size(207, 58);
+            this.lblR2RMaxTime.Size = new System.Drawing.Size(207, 40);
             this.lblR2RMaxTime.TabIndex = 6;
             this.lblR2RMaxTime.Text = "00:00:00";
             this.lblR2RMaxTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lblR2RUpload
+            // lblR2RFileName
             // 
-            this.lblR2RUpload.AutoEllipsis = true;
-            this.lblR2RUpload.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblR2RUpload.ForeColor = System.Drawing.Color.Black;
-            this.lblR2RUpload.Location = new System.Drawing.Point(14, 491);
-            this.lblR2RUpload.Name = "lblR2RUpload";
-            this.lblR2RUpload.Size = new System.Drawing.Size(203, 20);
-            this.lblR2RUpload.TabIndex = 9;
+            this.lblR2RFileName.AutoEllipsis = true;
+            this.lblR2RFileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblR2RFileName.ForeColor = System.Drawing.Color.DarkViolet;
+            this.lblR2RFileName.Location = new System.Drawing.Point(15, 377);
+            this.lblR2RFileName.Name = "lblR2RFileName";
+            this.lblR2RFileName.Size = new System.Drawing.Size(203, 23);
+            this.lblR2RFileName.TabIndex = 5;
+            this.lblR2RFileName.Click += new System.EventHandler(this.label9_Click);
             // 
-            // label13
+            // label8
             // 
-            this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(14, 468);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(150, 16);
-            this.label13.TabIndex = 8;
-            this.label13.Text = "Upload Reel to FTP:";
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(15, 354);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(123, 16);
+            this.label8.TabIndex = 4;
+            this.label8.Text = "Output Filename:";
+            this.label8.Click += new System.EventHandler(this.label8_Click);
             // 
-            // pictureBox1
+            // label7
             // 
-            this.pictureBox1.AccessibleRole = System.Windows.Forms.AccessibleRole.Graphic;
-            this.pictureBox1.BackColor = System.Drawing.SystemColors.Control;
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(258, 45);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(14, 482);
-            this.pictureBox1.TabIndex = 10;
-            this.pictureBox1.TabStop = false;
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(14, 169);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(184, 16);
+            this.label7.TabIndex = 3;
+            this.label7.Text = "Recording Time Elapsed:";
             // 
-            // pictureBox2
+            // lblR2RTimeElapsed
             // 
-            this.pictureBox2.AccessibleRole = System.Windows.Forms.AccessibleRole.Graphic;
-            this.pictureBox2.BackColor = System.Drawing.SystemColors.Control;
-            this.pictureBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox2.Location = new System.Drawing.Point(242, 45);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(14, 482);
-            this.pictureBox2.TabIndex = 11;
-            this.pictureBox2.TabStop = false;
+            this.lblR2RTimeElapsed.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.lblR2RTimeElapsed.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblR2RTimeElapsed.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblR2RTimeElapsed.ForeColor = System.Drawing.SystemColors.ScrollBar;
+            this.lblR2RTimeElapsed.Location = new System.Drawing.Point(17, 199);
+            this.lblR2RTimeElapsed.Name = "lblR2RTimeElapsed";
+            this.lblR2RTimeElapsed.Size = new System.Drawing.Size(207, 40);
+            this.lblR2RTimeElapsed.TabIndex = 2;
+            this.lblR2RTimeElapsed.Text = "00:00:00";
+            this.lblR2RTimeElapsed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // button1
+            // lblR2RStatus
             // 
-            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(17, 131);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(206, 30);
-            this.button1.TabIndex = 12;
-            this.button1.Text = "Stop Recording";
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Visible = false;
+            this.lblR2RStatus.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.lblR2RStatus.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblR2RStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblR2RStatus.ForeColor = System.Drawing.Color.DimGray;
+            this.lblR2RStatus.Location = new System.Drawing.Point(17, 67);
+            this.lblR2RStatus.Name = "lblR2RStatus";
+            this.lblR2RStatus.Size = new System.Drawing.Size(206, 54);
+            this.lblR2RStatus.TabIndex = 1;
+            this.lblR2RStatus.Text = "Idle";
+            this.lblR2RStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(14, 42);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(54, 16);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Status:";
+            // 
+            // PbPlaybackProgress2
+            // 
+            this.PbPlaybackProgress2.Location = new System.Drawing.Point(50, 90);
+            this.PbPlaybackProgress2.Name = "PbPlaybackProgress2";
+            this.PbPlaybackProgress2.Size = new System.Drawing.Size(518, 22);
+            this.PbPlaybackProgress2.TabIndex = 11;
+            // 
+            // PbPlaybackProgress
+            // 
+            this.PbPlaybackProgress.Location = new System.Drawing.Point(50, 89);
+            this.PbPlaybackProgress.Name = "PbPlaybackProgress";
+            this.PbPlaybackProgress.Size = new System.Drawing.Size(521, 22);
+            this.PbPlaybackProgress.TabIndex = 9;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1171, 609);
+            this.ClientSize = new System.Drawing.Size(1119, 609);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.BtnStopandClear);
@@ -673,8 +670,7 @@ namespace Carrel_Stream_Assistant
             this.NotifyIconContext.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbReelToReel)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -721,19 +717,18 @@ namespace Carrel_Stream_Assistant
         private NewProgressBar PbPlaybackProgress;
         private NewProgressBar PbPlaybackProgress2;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Label lblR2RUpload;
-        private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label lblR2RMaxTime;
-        private System.Windows.Forms.Label lblR2RFileName;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label lblR2RTimeElapsed;
-        private System.Windows.Forms.Label lblR2RStatus;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button button1;
+        internal System.Windows.Forms.Label lblR2RStatus;
+        internal System.Windows.Forms.Label lblR2RMaxTime;
+        internal System.Windows.Forms.Label lblR2RTimeElapsed;
+        internal System.Windows.Forms.Label lblR2RFileName;
+        internal System.Windows.Forms.PictureBox pbReelToReel;
+        internal NAudio.Gui.VolumeMeter vuRecLeft;
+        internal NAudio.Gui.VolumeMeter vuRecRight;
+        internal System.Windows.Forms.Button btnEmergencyStopRec;
     }
 }
 

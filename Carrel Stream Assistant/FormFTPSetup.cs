@@ -22,6 +22,7 @@ namespace Carrel_Stream_Assistant
         private void BtnAddFTPServer_Click(object sender, EventArgs e)
         {
             EnableAndClearFTPDetails();
+            btnTestFTP.Enabled = false;
             txtPassword.PasswordChar = '\0'; //enable clear text mode for new servers
             lstFTPServers.SelectedIndex = -1;
         }
