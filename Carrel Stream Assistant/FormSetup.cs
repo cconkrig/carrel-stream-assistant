@@ -1010,6 +1010,18 @@ namespace Carrel_Stream_Assistant
                 int volume = (int)(float.Parse(settings.AudioFeedVolume) * sliderInputVolume.Maximum);
                 sliderInputVolume.Value = volume;
 
+                if(settings.InputVolumeControl == 1)
+                {
+                    chkEnableVolumeControl.Checked = true;
+                    label9.Enabled = true;
+                    sliderInputVolume.Enabled = true;
+                } else
+                {
+                    chkEnableVolumeControl.Checked = false;
+                    label9.Enabled = false;
+                    sliderInputVolume.Enabled = false;
+                }
+
                 if(ComboBoxNetCueProcessingMode.SelectedIndex == 0)
                 {
                     TextBoxStartNetCue.Enabled = false;
@@ -1134,7 +1146,8 @@ namespace Carrel_Stream_Assistant
                 NetCueProcessingMode = ComboBoxNetCueProcessingMode.SelectedItem.ToString(),
                 NetCueStartCommand = TextBoxStartNetCue.Text,
                 NetCueStopCommand = TextBoxStopNetCue.Text,
-                AudioFeedVolume = ((float)sliderInputVolume.Value / sliderInputVolume.Maximum).ToString()
+                AudioFeedVolume = ((float)sliderInputVolume.Value / sliderInputVolume.Maximum).ToString(),
+                InputVolumeControl = chkEnableVolumeControl.Checked ? 1 : 0
             };
             UpdateGeneralSettings(updatedSettings);
             parentForm.UpdateMode("Mode: " + ComboBoxNetCueProcessingMode.SelectedItem.ToString());
@@ -1146,7 +1159,7 @@ namespace Carrel_Stream_Assistant
             {
                 connection.Open();
 
-                string updateQuery = "UPDATE Settings SET NetCuePort = @Port, NetCueProcessingMode = @Mode, NetCueStartCommand = @StartCommand, NetCueStopCommand = @StopCommand, AudioFeedVolume = @AudioFeedVolume WHERE Id = @Id";
+                string updateQuery = "UPDATE Settings SET NetCuePort = @Port, NetCueProcessingMode = @Mode, NetCueStartCommand = @StartCommand, NetCueStopCommand = @StopCommand, AudioFeedVolume = @AudioFeedVolume, InputVolumeControl = @InputVolumeControl WHERE Id = @Id";
 
                 using (SQLiteCommand updateCommand = new SQLiteCommand(updateQuery, connection))
                 {
@@ -1156,6 +1169,7 @@ namespace Carrel_Stream_Assistant
                     updateCommand.Parameters.AddWithValue("@StartCommand", updatedSettings.NetCueStartCommand);
                     updateCommand.Parameters.AddWithValue("@StopCommand", updatedSettings.NetCueStopCommand);
                     updateCommand.Parameters.AddWithValue("@AudioFeedVolume", updatedSettings.AudioFeedVolume);
+                    updateCommand.Parameters.AddWithValue("@InputVolumeControl", updatedSettings.InputVolumeControl);
 
                     updateCommand.ExecuteNonQuery();
                 }
@@ -1217,6 +1231,21 @@ namespace Carrel_Stream_Assistant
         {
             FormFTPSetup FormFTPSetup = new FormFTPSetup();
             FormFTPSetup.ShowDialog();
+        }
+
+        private void chkEnableVolumeControl_CheckedChanged(object sender, EventArgs e)
+        {
+            if(!chkEnableVolumeControl.Checked)
+            {
+                label9.Enabled = false;
+                sliderInputVolume.Enabled = false;
+            } else
+            {
+                label9.Enabled = true;
+                sliderInputVolume.Enabled = true;
+            }
+            BtnCancelGeneral.Enabled = true;
+            BtnSaveGeneral.Enabled = true;
         }
     }
 }

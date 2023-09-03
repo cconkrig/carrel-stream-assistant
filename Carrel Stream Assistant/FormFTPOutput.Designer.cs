@@ -43,16 +43,15 @@ namespace Carrel_Stream_Assistant
             this.ftpTerminal.Name = "ftpTerminal";
             this.ftpTerminal.ReadOnly = true;
             this.ftpTerminal.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.ftpTerminal.Size = new System.Drawing.Size(769, 409);
+            this.ftpTerminal.Size = new System.Drawing.Size(652, 290);
             this.ftpTerminal.TabIndex = 0;
             this.ftpTerminal.Text = "";
-            this.ftpTerminal.TextChanged += new System.EventHandler(this.ftpTerminal_TextChanged);
             // 
             // progressUpload
             // 
             this.progressUpload.Location = new System.Drawing.Point(17, 12);
             this.progressUpload.Name = "progressUpload";
-            this.progressUpload.Size = new System.Drawing.Size(769, 12);
+            this.progressUpload.Size = new System.Drawing.Size(652, 12);
             this.progressUpload.TabIndex = 1;
             this.progressUpload.Visible = false;
             // 
@@ -61,7 +60,7 @@ namespace Carrel_Stream_Assistant
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(686, 332);
             this.Controls.Add(this.progressUpload);
             this.Controls.Add(this.ftpTerminal);
             this.Cursor = System.Windows.Forms.Cursors.IBeam;
@@ -70,6 +69,7 @@ namespace Carrel_Stream_Assistant
             this.MinimizeBox = false;
             this.Name = "FormFTPOutput";
             this.Text = "FTP Terminal Output";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormFTPOutput_FormClosing);
             this.Load += new System.EventHandler(this.FormFTPOutput_Load);
             this.ResumeLayout(false);
 

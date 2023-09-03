@@ -93,13 +93,26 @@ namespace Carrel_Stream_Assistant
                     TransferMode INT DEFAULT 0 NOT NULL
                 ); 
 
-                ALTER TABLE ReelToReel ADD COLUMN FTPServerId INT;
-                ALTER TABLE ReelToReel ADD COLUMN FTPPath TEXT DEFAULT '/' NOT NULL;
+                ALTER TABLE ReelToReel ADD COLUMN FTPServerId INTEGER;
+                ALTER TABLE ReelToReel ADD COLUMN FTPPath TEXT DEFAULT '' NOT NULL;
                 ";
                 updateCommand.ExecuteNonQuery();
             }
 
             SetSchemaVersion(connection, 4);
+        }
+
+        public static void UpdateToVersion5(SQLiteConnection connection)
+        {
+            using (SQLiteCommand updateCommand = new SQLiteCommand(connection))
+            {
+                updateCommand.CommandText = @"
+                ALTER TABLE Settings ADD COLUMN InputVolumeControl INTEGER DEFAULT '0' NOT NULL;;
+                ";
+                updateCommand.ExecuteNonQuery();
+            }
+
+            SetSchemaVersion(connection, 5);
         }
 
         public static int GetSchemaVersion(SQLiteConnection connection)

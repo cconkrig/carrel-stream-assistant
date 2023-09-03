@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Carrel_Stream_Assistant
@@ -75,6 +69,11 @@ namespace Carrel_Stream_Assistant
                                     "> File uploaded successful!",
                                     Color.Green
                                 );
+                                parent.Invoke((Action)(() =>
+                                {
+                                    parent.AddLog("Uploaded file to FTP successfully.", Color.Green);
+                                }));
+
                                 UpdateScreen(this, termArgs);
                                 ftpTerminal.AppendText(Environment.NewLine);
                                 countdownLineIndex = ftpTerminal.Lines.Length - 1;
@@ -86,6 +85,10 @@ namespace Carrel_Stream_Assistant
                                     "> File uploaded failed!",
                                     Color.Red
                                 );
+                                parent.Invoke((Action)(() =>
+                                {
+                                    parent.AddLog("Failed to upload file to FTP!", Color.Red);
+                                }));
                                 UpdateScreen(this, termArgs);
                                 ftpTerminal.AppendText(Environment.NewLine);
                                 countdownLineIndex = ftpTerminal.Lines.Length - 1;
@@ -148,9 +151,9 @@ namespace Carrel_Stream_Assistant
             ftpTerminal.ScrollToCaret();
         }
 
-        private void ftpTerminal_TextChanged(object sender, EventArgs e)
+        private void FormFTPOutput_FormClosing(object sender, FormClosingEventArgs e)
         {
-
+            countdownTimer.Enabled = false;
         }
     }
 }

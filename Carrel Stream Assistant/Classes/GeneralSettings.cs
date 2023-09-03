@@ -7,5 +7,7 @@
         public string NetCueStartCommand { get; set; }
         public string NetCueStopCommand { get; set; }
         public string AudioFeedVolume { get; set; }
+        public int InputVolumeControl { get; set; }
+
     }
 }

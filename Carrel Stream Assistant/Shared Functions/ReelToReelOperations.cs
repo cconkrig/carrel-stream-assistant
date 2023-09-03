@@ -100,11 +100,8 @@ namespace Carrel_Stream_Assistant
                         mainForm.lblR2RMaxTime.ForeColor = Color.Red;
                     }
                 };
-                mainForm.pbReelToReel.Visible = true;
                 mainForm.vuRecLeft.Visible = true;
                 mainForm.vuRecRight.Visible = true;
-
-
             }));
         }
 
@@ -124,7 +121,6 @@ namespace Carrel_Stream_Assistant
                 mainForm.lblR2RFileName.Text = "";
                 mainForm.vuRecLeft.Visible = false;
                 mainForm.vuRecRight.Visible = false;
-                mainForm.pbReelToReel.Visible = false;
                 mainForm.btnEmergencyStopRec.Visible = false;
             }));
         }

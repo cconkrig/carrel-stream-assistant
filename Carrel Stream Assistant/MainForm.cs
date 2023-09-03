@@ -14,6 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Data.SQLite;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Carrel_Stream_Assistant
 {
@@ -96,11 +97,8 @@ namespace Carrel_Stream_Assistant
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-
+            this.Show();
         }
-
-
-
 
         private void RecBlinkTimer_Tick(object sender, EventArgs e)
         {
@@ -178,9 +176,17 @@ namespace Carrel_Stream_Assistant
                 GeneralSettings settings = DatabaseOperations.GetGeneralSettingsFromDatabase();
                 if (settings != null)
                 {
-                    float volume = float.Parse(settings.AudioFeedVolume);
-                    float dB = ConvertLinearToDB(volume);
-                    SetAudioFeedVolume(volume, dB);
+                    if (settings.InputVolumeControl == 1)
+                    {
+                        float volume = float.Parse(settings.AudioFeedVolume);
+                        float dB = ConvertLinearToDB(volume);
+                        SetAudioFeedVolume(volume, dB);
+                    } else
+                    {
+                        // Immediately set the requested Audio Feed Volume to startup value
+                        float dB = ConvertLinearToDB(audioFeedVolumeAtStartup);
+                        SetAudioFeedVolume(audioFeedVolumeAtStartup, dB); // return to normal volume when the software was started.
+                    }
                 }
             } else
             {
@@ -1058,13 +1064,13 @@ namespace Carrel_Stream_Assistant
             // Unsubscribing from SampleChannel.PreVolumeMeter
             if (isSampleChannel1Subscribed)
             {
-                AddLog($"---- Stopped Player 1 ({LabelPlayer1Filename.Text})", Color.DarkRed, Color.White);
+                AddLog($"---- Stopped Player 1 ({LabelPlayer1Filename.Text})", Color.DarkRed);
                 sampleChannel1.PreVolumeMeter -= SampleChannel_PreVolumeMeter1;
                 isSampleChannel1Subscribed = false;
             }
             if (isSampleChannel2Subscribed)
             {
-                AddLog($"---- Stopped Player 2 ({LabelPlayer2Filename.Text})", Color.DarkRed, Color.White);
+                AddLog($"---- Stopped Player 2 ({LabelPlayer2Filename.Text})", Color.DarkRed);
                 sampleChannel2.PreVolumeMeter -= SampleChannel_PreVolumeMeter2;
                 isSampleChannel2Subscribed = false;
             }
@@ -1145,7 +1151,7 @@ namespace Carrel_Stream_Assistant
 
         private void BtnClearQueue_Click(object sender, EventArgs e)
         {
-            AddLog("Playback Queue Cleared.", Color.Cornsilk, Color.White);
+            AddLog("Playback Queue Cleared.", Color.PaleVioletRed);
             lstQueue.Items.Clear();
         }
 
@@ -1177,6 +1183,7 @@ namespace Carrel_Stream_Assistant
                 this.Hide(); // Hide the main form
             }
         }
+
 
         private void NotifyIcon_Click(object sender, EventArgs e)
         {
@@ -1217,30 +1224,10 @@ namespace Carrel_Stream_Assistant
             e.DrawFocusRectangle();
         }
 
-        private void label9_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label8_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
-        private void volumeMeter1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnEmergencyStopRec_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void BtnEmergencyStopRec_Click(object sender, EventArgs e)
         {
             ReelToReelOperations.StopReel(this, "Emergency");
         }
+
     }
 }

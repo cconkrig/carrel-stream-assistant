@@ -32,14 +32,14 @@ namespace Carrel_Stream_Assistant
                 if (rect.Width == 0)
                 {
                     rect.Width = 1; // Can't draw rec with width of 0.
-                    using (var brush = new LinearGradientBrush(rect, Color.Transparent, Color.Transparent, LinearGradientMode.Horizontal))
+                    using (var brush = new SolidBrush(ForeColor)) // Use a SolidBrush with the desired color
                     {
                         offscreen.FillRectangle(brush, inset, inset, rect.Width, rect.Height);
                     }
                 }
                 else
                 {
-                    using (var brush = new LinearGradientBrush(rect, BackColor, ForeColor, LinearGradientMode.Horizontal))
+                    using (var brush = new SolidBrush(ForeColor)) // Use a SolidBrush with the desired color
                     {
                         offscreen.FillRectangle(brush, inset, inset, rect.Width, rect.Height);
                     }

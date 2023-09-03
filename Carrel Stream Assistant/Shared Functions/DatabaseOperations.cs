@@ -2,7 +2,6 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Windows.Forms;
 
 
 namespace Carrel_Stream_Assistant
@@ -15,6 +14,12 @@ namespace Carrel_Stream_Assistant
 
         public static void CheckDatabase()
         {
+            string directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Cyber-Comp Technologies, LLC", "Carrel Stream Assistant");
+
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
             using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
                 connection.Open();
@@ -27,6 +32,7 @@ namespace Carrel_Stream_Assistant
                 if (currentVersion < 2) { SchemaUpdater.UpdateToVersion2(connection); }
                 if (currentVersion < 3) { SchemaUpdater.UpdateToVersion3(connection); }
                 if (currentVersion < 4) { SchemaUpdater.UpdateToVersion4(connection); }
+                if (currentVersion < 5) { SchemaUpdater.UpdateToVersion5(connection); }
             }
         }
 
@@ -36,7 +42,7 @@ namespace Carrel_Stream_Assistant
             {
                 connection.Open();
 
-                string selectQuery = "SELECT NetCuePort, NetCueProcessingMode, NetCueStartCommand, NetCueStopCommand, AudioFeedVolume FROM Settings WHERE Id = @Id";
+                string selectQuery = "SELECT NetCuePort, NetCueProcessingMode, NetCueStartCommand, NetCueStopCommand, AudioFeedVolume, InputVolumeControl FROM Settings WHERE Id = @Id";
                 using (SQLiteCommand selectCommand = new SQLiteCommand(selectQuery, connection))
                 {
                     selectCommand.Parameters.AddWithValue("@Id", 1); // Assuming 'Id' value for the settings row
@@ -51,7 +57,8 @@ namespace Carrel_Stream_Assistant
                                 NetCueProcessingMode = reader["NetCueProcessingMode"].ToString(),
                                 NetCueStartCommand = reader["NetCueStartCommand"].ToString(),
                                 NetCueStopCommand = reader["NetCueStopCommand"].ToString(),
-                                AudioFeedVolume = reader["AudioFeedVolume"].ToString()
+                                AudioFeedVolume = reader["AudioFeedVolume"].ToString(),
+                                InputVolumeControl = Convert.ToInt32(reader["InputVolumeControl"])
                             };
 
                             return settings;
@@ -62,7 +69,8 @@ namespace Carrel_Stream_Assistant
                             NetCueProcessingMode = "Always Process Incoming NetCues",
                             NetCueStartCommand = "",
                             NetCueStopCommand = "",
-                            AudioFeedVolume = "1.0"
+                            AudioFeedVolume = "1.0",
+                            InputVolumeControl = 0
                         };
                         return settings;
                     }
