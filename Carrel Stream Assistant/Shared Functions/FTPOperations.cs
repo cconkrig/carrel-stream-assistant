@@ -6,11 +6,27 @@ using System.Net;
 using System.Drawing;
 using FluentFTP;
 using System.Windows.Forms;
+using System.Threading;
+using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace Carrel_Stream_Assistant
 {
     public static class FTPOperations
     {
+        private static readonly string logDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Cyber-Comp Technologies, LLC", "Carrel Stream Assistant", "log");
+
+        public static void AddFTPLog(string message)
+        {
+            string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} :: {message}";
+            string logFileName = $"log_{DateTime.Now:yyyyMMdd}.txt";
+            string logFilePath = Path.Combine(logDirectory, logFileName);
+            using (StreamWriter writer = File.AppendText(logFilePath))
+            {
+                writer.WriteLine(logEntry);
+            }
+        }
+
         // Encryption Key
         private static readonly byte[] AesKey = new byte[]
         {
@@ -210,7 +226,7 @@ namespace Carrel_Stream_Assistant
                     {
                         string guid = Path.GetRandomFileName().Replace(".", "");
                         testFilename = $"CarrelStreamAssistant_{guid}_SafeToDelete.txt";
-                        UpdateTerminal($"> Attempting to write {testFilename} to /");
+                        UpdateTerminal($"> Attempting to write {testFilename}...");
 
                         using (var stream = ftpClient.OpenWrite(testFilename))
                         {
@@ -233,7 +249,6 @@ namespace Carrel_Stream_Assistant
                         try
                         {
                             // Attempt to delete the file
-                            ftpClient.SetWorkingDirectory("/");
                             ftpClient.DeleteFile(testFilename);
                             UpdateTerminal($"> Removed {testFilename}.", Color.Green);
                             return true;
@@ -257,56 +272,96 @@ namespace Carrel_Stream_Assistant
             return false;
         }
 
-        public static bool UploadFile(FTPServerItem ftpServer, ReelItem reelItem, string filename_to_upload = null, dynamic parent = null)
+        public static async Task<bool> UploadFileAsync(FTPServerItem ftpServer, ReelItem reelItem, string filename_to_upload = null, dynamic parent = null)
         {
             dynamic ftpClient = ConnectToFTP(ftpServer);
             if (ftpClient != null)
             {
                 try
                 {
-                    // Perform FTP/FTPS operations using the dynamic object
-                    using (ftpClient)
+                    UpdateTerminal($"> Setting working directory: {reelItem.FTPPath}");
+                    ftpClient.SetWorkingDirectory($"{reelItem.FTPPath}");
+                    parent.progressUpload.Visible = true;
+                    UpdateTerminal($"> Uploading {filename_to_upload}...");
+
+                    // Extract the filename from the full path
+                    string filename = Path.GetFileName(filename_to_upload);
+
+                    using (var stream = ftpClient.OpenWrite(filename))
+                    using (var fileStream = File.OpenRead(filename_to_upload))
                     {
-                        UpdateTerminal($"> Setting working directory: {reelItem.FTPPath}");
-                        ftpClient.SetWorkingDirectory($"{reelItem.FTPPath}");
-                        parent.progressUpload.Visible = true;
-                        UpdateTerminal($"> Uploading {filename_to_upload}...");
+                        byte[] buffer = new byte[4096]; // Buffer size for reading the file
+                        int bytesRead;
+                        long totalBytes = fileStream.Length;
+                        long uploadedBytes = 0;
 
-                        // Extract the filename from the full path
-                        string filename = Path.GetFileName(filename_to_upload);
-                        using (var stream = ftpClient.OpenWrite(filename))
+                        while ((bytesRead = fileStream.Read(buffer, 0, buffer.Length)) > 0)
                         {
-                            using (var fileStream = File.OpenRead(filename_to_upload))
+                            await stream.WriteAsync(buffer, 0, bytesRead);
+                            uploadedBytes += bytesRead;
+                            if (!parent.IsDisposed)
                             {
-                                byte[] buffer = new byte[4096]; // Buffer size for reading the file
-                                int bytesRead;
-                                long totalBytes = fileStream.Length;
-                                long uploadedBytes = 0;
-
-                                while ((bytesRead = fileStream.Read(buffer, 0, buffer.Length)) > 0)
+                                if (parent.InvokeRequired)
                                 {
-                                    stream.Write(buffer, 0, bytesRead);
-                                    uploadedBytes += bytesRead;
-
-                                    // Update the progress bar
+                                    // Update the progress bar on the UI thread
+                                    parent.Invoke((MethodInvoker)delegate
+                                    {
+                                        int progressPercentage = (int)((float)uploadedBytes / totalBytes * 100);
+                                        parent.progressUpload.Value = progressPercentage;
+                                    });
+                                }
+                                else
+                                {
                                     int progressPercentage = (int)((float)uploadedBytes / totalBytes * 100);
                                     parent.progressUpload.Value = progressPercentage;
                                 }
                             }
                         }
                     }
-                    UpdateTerminal($"> Upload Finished!");
+
+                    if (!parent.IsDisposed)
+                    {
+                        if (parent.InvokeRequired)
+                        {
+                            // Upload Finished message on the UI thread
+                            parent.Invoke((MethodInvoker)delegate
+                            {
+                                UpdateTerminal($"> Upload Finished!");
+                            });
+                        }
+                        else
+                        {
+                            UpdateTerminal($"> Upload Finished!");
+                        }
+                    }
                     return true;
                 }
                 catch (Exception e)
                 {
-                    UpdateTerminal($"> UPLOAD FAILED.", Color.Red);
-                    UpdateTerminal($"> {e.Message}", Color.Red);
+                    if (!parent.IsDisposed)
+                    {
+                        if (parent.InvokeRequired)
+                        {
+                            // Upload Failed message on the UI thread
+                            parent.Invoke((MethodInvoker)delegate
+                            {
+                                UpdateTerminal($"> UPLOAD FAILED.", Color.Red);
+                                UpdateTerminal($"> {e.Message}", Color.Red);
+                            });
+                        }
+                        else
+                        {
+                            UpdateTerminal($"> UPLOAD FAILED.", Color.Red);
+                            UpdateTerminal($"> {e.Message}", Color.Red);
+                        }
+                    }
                     return false;
                 }
             }
             return false;
         }
+
+
 
 
         public static void UpdateTerminal(string terminalLine, Color forecolor = default(Color))
@@ -316,6 +371,7 @@ namespace Carrel_Stream_Assistant
                 forecolor = Color.White;
             }
             ScreenUpdated?.Invoke(null, new TerminalUpdateEventArgs(terminalLine, forecolor));
+            AddFTPLog(terminalLine);
         }
 
 

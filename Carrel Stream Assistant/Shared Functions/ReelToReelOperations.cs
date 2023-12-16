@@ -25,44 +25,73 @@ namespace Carrel_Stream_Assistant
         {
             string filename;
             string[] startcommand_parts = receivedText.Split(new string[] { "::" }, StringSplitOptions.RemoveEmptyEntries);
-            string filename_in_processing = reelItem.Filename;
+            string baseFilename = reelItem.Filename;
 
-            //process dynamic filename
-            if (startcommand_parts.Length > 1) {
-                filename_in_processing = filename_in_processing.Replace("{cartname}", startcommand_parts[1]);
+            // Process dynamic filename
+            if (startcommand_parts.Length > 1)
+            {
+                baseFilename = baseFilename.Replace("{cartname}", startcommand_parts[1]);
             }
 
-            //get now so we can process the date and time replacements
+            // Get current date and time for replacements
             DateTime date = DateTime.Now;
 
-            //process date in filename
+            // Process date in filename
             string formattedDate = date.ToString("yyyyMMdd");
-            filename_in_processing = filename_in_processing.Replace("{date}", formattedDate);
+            baseFilename = baseFilename.Replace("{date}", formattedDate);
 
-            //process time in filename
+            // Process time in filename
             string formattedTime = date.ToString("HHmm");
-            filename_in_processing = filename_in_processing.Replace("{time}", formattedTime);
+            baseFilename = baseFilename.Replace("{time}", formattedTime);
 
             switch (reelItem.Format)
             {
+                case 0:
+                    baseFilename += ".ogg";
+                    break;
                 case 1:
-                    filename_in_processing = filename_in_processing + ".mp3";
+                    baseFilename += ".m4a";
                     break;
                 case 2:
-                    filename_in_processing = filename_in_processing + ".wav";
+                    baseFilename += ".mp3";
                     break;
                 default:
-                    filename_in_processing = filename_in_processing + ".m4a";
+                    baseFilename += ".wav";
                     break;
             }
-            //clean up the filename to remove any bad/invalid filenames
-            string directoryPath = Path.GetDirectoryName(filename_in_processing);
-            string raw_filename = Path.GetFileName(filename_in_processing);
+
+            // Clean up the filename to remove any bad/invalid characters
+            string directoryPath = Path.GetDirectoryName(baseFilename);
+            string rawFilename = Path.GetFileName(baseFilename);
             char[] invalidChars = Path.GetInvalidFileNameChars();
-            string cleanedFileName = new string(raw_filename.Where(c => !invalidChars.Contains(c)).ToArray());
-            filename = Path.Combine(directoryPath, cleanedFileName);
+            string cleanedFileName = new string(rawFilename.Where(c => !invalidChars.Contains(c)).ToArray());
+
+            if (!File.Exists(Path.Combine(directoryPath, cleanedFileName)))
+            {
+                // The original file does not exist, so we can use it as is
+                filename = Path.Combine(directoryPath, cleanedFileName);
+            }
+            else
+            {
+                // The original file exists, let's add a counter to the filename
+                string originalExtension = Path.GetExtension(cleanedFileName);
+                string candidateNameWithoutExtension = Path.GetFileNameWithoutExtension(cleanedFileName);
+                int counter = 1;
+
+                string candidateFilename;
+                do
+                {
+                    candidateFilename = $"{candidateNameWithoutExtension}_{counter}{originalExtension}";
+                    counter++;
+                }
+                while (File.Exists(Path.Combine(directoryPath, candidateFilename)));
+
+                filename = Path.Combine(directoryPath, candidateFilename);
+            }
+
             return filename;
         }
+
 
         public static void StopReel(MainForm mainForm, string stopType = "Normal")
         {
@@ -178,24 +207,31 @@ namespace Carrel_Stream_Assistant
                         {
                             waveInEvent.DataAvailable += (sender, args) =>
                             {
+                                if (cancellationToken.IsCancellationRequested)
+                                {
+                                    // Stop recording immediately if cancellation is requested
+                                    waveInEvent.StopRecording();
+                                    return;
+                                }
+
                                 waveFileWriter.Write(args.Buffer, 0, args.BytesRecorded);
                                 float leftPeakValue = 0f;
                                 float rightPeakValue = 0f;
 
-                            // Process the audio data and calculate the peak values for left and right channels
-                            for (int i = 0; i < args.BytesRecorded; i += 4) // Assuming 16-bit stereo audio
-                            {
+                                // Process the audio data and calculate the peak values for left and right channels
+                                for (int i = 0; i < args.BytesRecorded; i += 4) // Assuming 16-bit stereo audio
+                                {
                                     short leftSample = (short)((args.Buffer[i + 1] << 8) | args.Buffer[i]);
                                     float leftSampleValue = leftSample / 32768f; // Normalize the sample value to the range [-1, 1]
-                                leftPeakValue = Math.Max(leftPeakValue, Math.Abs(leftSampleValue));
+                                    leftPeakValue = Math.Max(leftPeakValue, Math.Abs(leftSampleValue));
 
                                     short rightSample = (short)((args.Buffer[i + 3] << 8) | args.Buffer[i + 2]);
                                     float rightSampleValue = rightSample / 32768f; // Normalize the sample value to the range [-1, 1]
-                                rightPeakValue = Math.Max(rightPeakValue, Math.Abs(rightSampleValue));
+                                    rightPeakValue = Math.Max(rightPeakValue, Math.Abs(rightSampleValue));
                                 }
 
-                            // Update the VU meters in the recording section
-                            mainForm.Invoke((MethodInvoker)(() => { mainForm.UpdateRecVUMeters(leftPeakValue, rightPeakValue); }));
+                                // Update the VU meters in the recording section
+                                mainForm.Invoke((MethodInvoker)(() => { mainForm.UpdateRecVUMeters(leftPeakValue, rightPeakValue); }));
                             };
 
                             waveInEvent.RecordingStopped += (sender, e) =>
@@ -220,18 +256,18 @@ namespace Carrel_Stream_Assistant
                                     {
                                         TurnRecordingStatusOff(mainForm);
                                     }
-
-                                    // Optionally add a small delay to reduce CPU load
+                                    // Add a small delay to reduce CPU load
                                     await Task.Delay(100); // Adjust the delay value as needed
                                 }
                             }
                             finally
                             {
-                                mainForm.AddLog($"Recording stopped.");
+                                mainForm.AddLog($"Stopping Recording...");
                                 stopwatch.Stop(); // Stop the stopwatch
                                 waveInEvent.StopRecording();
-                                waveFileWriter?.Dispose(); // Dispose of the writer to flush data and release the file
+                                mainForm.AddLog($"Recording Stopped. Disposing of record handle...");
                                 waveInEvent.Dispose();
+                                mainForm.AddLog($"Record handle disposed.");
                                 TurnRecordingStatusOff(mainForm);
                                 #pragma warning disable CS4014 //disable warning about awaiting a task. We don't care, let it process
                                 Task.Run(() => ConvertFileFormat(reelItem, mainForm));
@@ -246,15 +282,16 @@ namespace Carrel_Stream_Assistant
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 mainForm.AddLog("Error! Could not start recording.");
+                mainForm.AddLog(e.Message);
             }
         }
 
         private static void ConvertFileFormat(ReelItem reelItem, MainForm mainForm)
         {
-            string outputFilePath;
+            string outputFilePath = mainForm.currentReelToReelFilename;
             string reelFileName = mainForm.currentReelToReelFilename + ".tmp";
             mainForm.Invoke((Action)(() =>
             {
@@ -283,149 +320,97 @@ namespace Carrel_Stream_Assistant
                 }
             }
 
-            string reelTempFile = mainForm.currentReelToReelFilename + ".tmp";
-            string ffmpegPath = Path.Combine(AppContext.BaseDirectory, "ffmpeg.exe"); // Path to ffmpeg executable
-
             switch (reelItem.Format)
             {
                 case 0:
-                    try
-                    {
-                        mainForm.Invoke((Action)(() =>
-                        {
-                            mainForm.AddLog("Converting to AAC format...");
-                        }));
-                        string outputAACFile = mainForm.currentReelToReelFilename;
-                        string ffmpegArguments = $"-y -i \"{reelTempFile}\" -c:a aac -b:a 128k \"{outputAACFile}\"";
-                        ProcessStartInfo processStartInfo = new ProcessStartInfo
-                        {
-                            FileName = ffmpegPath,
-                            Arguments = ffmpegArguments,
-                            RedirectStandardOutput = true,
-                            RedirectStandardError = true,
-                            UseShellExecute = false,
-                            CreateNoWindow = true
-                        };
-                        using (Process process = new Process())
-                        {
-                            process.StartInfo = processStartInfo;
-
-                            process.OutputDataReceived += (sender, e) => Console.WriteLine(e.Data);
-                            process.ErrorDataReceived += (sender, e) => Console.WriteLine(e.Data);
-
-                            process.Start();
-                            process.BeginOutputReadLine();
-                            process.BeginErrorReadLine();
-
-                            process.WaitForExit(); // Pauses here until the process completes
-                        }
-                        File.Delete(reelTempFile);
-                        mainForm.Invoke((Action)(() =>
-                        {
-                            mainForm.AddLog($"Conversion to M4A (AAC) completed: {outputAACFile}");
-                            mainForm.currentReelToReelFilename = null;
-                            UploadFTP(reelItem, mainForm, outputAACFile);
-                        }));
-                        
-                    }
-                    catch (Exception e)
-                    {
-                        mainForm.Invoke((Action)(() =>
-                        {
-                            mainForm.AddLog($"Error converting recorded file to AAC format: {reelTempFile}", Color.Red);
-                            mainForm.AddLog($"{e.Message}", Color.Red);
-                            Debug.WriteLine($"{e.Message}");
-                            mainForm.currentReelToReelFilename = null;
-                        }));
-                    }
+                    EncodeAudioFile(AudioEncoder.OPUS,reelItem, reelFileName, mainForm, outputFilePath);
                     break;
-
                 case 1:
-                    outputFilePath = mainForm.currentReelToReelFilename;
-                    try
-                    {
-                        try
-                        {
-                            mainForm.Invoke((Action)(() =>
-                            {
-                                mainForm.AddLog("Converting to MP3 format...");
-                            }));
-                            string outputAACFile = mainForm.currentReelToReelFilename;
-                            string ffmpegArguments = $"-y -i \"{reelTempFile}\" -c:a mp3 -b:a 128k \"{outputFilePath}\"";
-                            ProcessStartInfo processStartInfo = new ProcessStartInfo
-                            {
-                                FileName = ffmpegPath,
-                                Arguments = ffmpegArguments,
-                                RedirectStandardOutput = true,
-                                RedirectStandardError = true,
-                                UseShellExecute = false,
-                                CreateNoWindow = true
-                            };
-                            using (Process process = new Process())
-                            {
-                                process.StartInfo = processStartInfo;
-
-                                process.OutputDataReceived += (sender, e) => Console.WriteLine(e.Data);
-                                process.ErrorDataReceived += (sender, e) => Console.WriteLine(e.Data);
-
-                                process.Start();
-                                process.BeginOutputReadLine();
-                                process.BeginErrorReadLine();
-
-                                process.WaitForExit(); // Pauses here until the process completes
-                            }
-                            File.Delete(reelTempFile);
-                            mainForm.Invoke((Action)(() =>
-                            {
-                                mainForm.AddLog($"Conversion to MP3 completed: {outputAACFile}");
-                                mainForm.currentReelToReelFilename = null;
-                                UploadFTP(reelItem, mainForm, outputAACFile);
-                            }));
-
-                        }
-                        catch (Exception e)
-                        {
-                            mainForm.Invoke((Action)(() =>
-                            {
-                                mainForm.AddLog($"Error converting recorded file to MP3 format: {reelTempFile}", Color.Red);
-                                mainForm.AddLog($"{e.Message}", Color.Red);
-                                Debug.WriteLine($"{e.Message}");
-                                mainForm.currentReelToReelFilename = null;
-                            }));
-                        }
-
-                    }
-                    catch (Exception e)
-                    {
-                        mainForm.Invoke((Action)(() =>
-                        {
-                            mainForm.AddLog($"Error converting recorded file to MP3 format: {outputFilePath}", Color.Red);
-                            mainForm.AddLog($"{e.Message}", Color.Red);
-                            Debug.WriteLine($"{e.Message}");
-                            mainForm.currentReelToReelFilename = null;
-                        }));
-                    }
+                    EncodeAudioFile(AudioEncoder.AAC, reelItem, reelFileName, mainForm, outputFilePath);
                     break;
-
+                case 2:
+                    EncodeAudioFile(AudioEncoder.MP3, reelItem, reelFileName, mainForm, outputFilePath);
+                    break;
                 case 3:
                     // standard old .wav file, just rename
-                    outputFilePath = mainForm.currentReelToReelFilename;
+                    mainForm.Invoke((Action)(() =>
+                    {
+                        mainForm.AddLog("Converting to WAV format...");
+                    }));
                     try
                     {
                         File.Move(reelFileName, outputFilePath);
-                        UploadFTP(reelItem, mainForm, outputFilePath);
+                        mainForm.Invoke((Action)(() =>
+                        {
+                            UploadFTP(reelItem, mainForm, outputFilePath);
+                        }));
                     }
                     catch (Exception)
                     {
                         mainForm.Invoke((Action)(() =>
                         {
-                            mainForm.AddLog($"Error converting recorded file to wav format: {outputFilePath}");
+                            mainForm.AddLog($"Error converting recorded file to WAV format: {outputFilePath}");
                             mainForm.currentReelToReelFilename = null;
                         }));
                     }
                     break;
             }
         }
+
+        private static void EncodeAudioFile(AudioEncoder encoder, ReelItem reelItem, string reelFileName, MainForm mainForm, string outputFilePath)
+        {
+            try
+            {
+                string ffmpegPath = Path.Combine(AppContext.BaseDirectory, "ffmpeg.exe"); // Path to ffmpeg executable
+                mainForm.Invoke((Action)(() =>
+                {
+                    // Add a log line in another thread
+                    mainForm.AddLog($"Converting to {EncoderInfo.GetName(encoder)} format...");
+                }));
+                string outputFile = mainForm.currentReelToReelFilename;
+                string ffmpegArguments = $"-y -i \"{reelFileName}\" -c:a {EncoderInfo.GetLibrary(encoder)} -b:a {EncoderInfo.GetBitrate(encoder)} \"{outputFilePath}\"";
+                ProcessStartInfo processStartInfo = new ProcessStartInfo
+                {
+                    FileName = ffmpegPath,
+                    Arguments = ffmpegArguments,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+                using (Process process = new Process())
+                {
+                    process.StartInfo = processStartInfo;
+
+                    process.OutputDataReceived += (sender, e) => Console.WriteLine(e.Data);
+                    process.ErrorDataReceived += (sender, e) => Console.WriteLine(e.Data);
+
+                    process.Start();
+                    process.BeginOutputReadLine();
+                    process.BeginErrorReadLine();
+
+                    process.WaitForExit(); // Pauses here until the process completes
+                }
+                Thread.Sleep(3000);
+                mainForm.Invoke((Action)(() =>
+                {
+                    mainForm.AddLog($"Conversion to OPUS (OGG) completed: {outputFilePath}");
+                    mainForm.currentReelToReelFilename = null;
+                    UploadFTP(reelItem, mainForm, outputFile);
+                }));
+            }
+            catch (Exception e)
+            {
+                mainForm.Invoke((Action)(() =>
+                {
+                    mainForm.AddLog($"Error converting recorded file to {EncoderInfo.GetName(encoder)} format: {reelFileName}", Color.Red);
+                    mainForm.AddLog($"{e.Message}", Color.Red);
+                    Debug.WriteLine($"{e.Message}");
+                    mainForm.currentReelToReelFilename = null;
+                }));
+            }
+        }
+
 
         internal static void UploadFTP(ReelItem reelItem, MainForm mainForm, string outputFilePath)
         {
@@ -443,6 +428,7 @@ namespace Carrel_Stream_Assistant
                 mainForm.Invoke((Action)(() =>
                 {
                     mainForm.AddLog($"FTP Upload ENABLED for Reel-To-Reel: {outputFilePath}");
+                    mainForm.AddLog($"Starting FTP Upload Sequence...");
                 }));
                 FTPServerItem ftpServer = DatabaseOperations.GetFTPServerById(reelItem.FTPServerId);
                 FormFTPOutput FormFTPOutput = new FormFTPOutput(mainForm, "upload", ftpServer, reelItem, outputFilePath);

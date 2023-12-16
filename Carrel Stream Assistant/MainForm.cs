@@ -56,6 +56,7 @@ namespace Carrel_Stream_Assistant
         public MainForm()
         {
             InitializeComponent();
+            this.Load += MainForm_Load;
             // Assign the instance to the static variable
             Instance = this;
             DatabaseOperations.CheckDatabase();
@@ -78,21 +79,36 @@ namespace Carrel_Stream_Assistant
             int netCuePort = settings.NetCuePort;
             string NetCueMode = settings.NetCueProcessingMode;
             serverIpAddress = GetLocalIPAddress();
-            udpClient = new UdpClient(netCuePort);
-            udpClient.BeginReceive(ReceiveCallback, null);
-            AddLog($"Carrel Stream Assistant Started. Listening for NetCues on {serverIpAddress} UDP Port {netCuePort}...");
+            try
+            {
+                udpClient = new UdpClient(netCuePort);
+                udpClient.BeginReceive(ReceiveCallback, null);
+                AddLog($"Carrel Stream Assistant Started. Listening for NetCues on {serverIpAddress} UDP Port {netCuePort}...");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Could not open UDP port: {netCuePort}");
+                AddLog($"Carrel is NOT listening for UDP NetCues - IP: {serverIpAddress} and Port {netCuePort} already in use!", Color.Red);
+                AddLog(ex.Message, Color.Red);
+            }
             // Get startup volume level so we know what to put it back to
             audioFeedVolumeAtStartup = GetAudioFeedVolume();
             float dB = ConvertLinearToDB(audioFeedVolumeAtStartup);
             AddLog($"Current Audio Feed Input Device volume is: {dB:F2} dB");
             TslblStatus.Text = $"Server: {serverIpAddress}:{netCuePort}";
-            UpdateMode($"Mode: {NetCueMode}"); //make sure this comes last as we need the start-up line first.
+            UpdateMode($"Mode: {NetCueMode}", true); //make sure this comes last as we need the start-up line first.
             recBlinkTimer = new System.Windows.Forms.Timer();
             recBlinkTimer.Interval = 150; // 150 milliseconds blink frequency
             recBlinkTimer.Tick += RecBlinkTimer_Tick;
             recTimer = new System.Windows.Forms.Timer();
             recTimer.Interval = 100; // 1000 milliseconds update frequency
             recTimer.Tick += RecTimer_Tick;
+            // Close the splash screen
+            FormSplash formSplash = Application.OpenForms.OfType<FormSplash>().FirstOrDefault();
+            if (formSplash != null)
+            {
+                formSplash.Invoke(new Action(() => formSplash.Close()));
+            }
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -166,14 +182,13 @@ namespace Carrel_Stream_Assistant
         }
 
         // Expose a public method to update the ToolStripMode
-        public void UpdateMode(string newText)
+        public void UpdateMode(string newText, bool startup = false)
         {
-            TslblMode.Text = newText;
-            if(newText == "Mode: Always Process Incoming NetCues")
+            GeneralSettings settings = DatabaseOperations.GetGeneralSettingsFromDatabase();
+
+            if (TslblMode.Text == newText)
             {
-                TslblStartStop.Visible = false;
-                // Immediately set the requested Audio Feed Volume
-                GeneralSettings settings = DatabaseOperations.GetGeneralSettingsFromDatabase();
+                // Don't change anything but volume
                 if (settings != null)
                 {
                     if (settings.InputVolumeControl == 1)
@@ -181,23 +196,55 @@ namespace Carrel_Stream_Assistant
                         float volume = float.Parse(settings.AudioFeedVolume);
                         float dB = ConvertLinearToDB(volume);
                         SetAudioFeedVolume(volume, dB);
-                    } else
+                    }
+                    else
                     {
                         // Immediately set the requested Audio Feed Volume to startup value
                         float dB = ConvertLinearToDB(audioFeedVolumeAtStartup);
                         SetAudioFeedVolume(audioFeedVolumeAtStartup, dB); // return to normal volume when the software was started.
                     }
                 }
-            } else
+            }
+            else
             {
-                TslblStartStop.Visible = true;
-                TslblStartStop.Text = "Processing Disabled";
-                TslblStartStop.ForeColor = Color.Red;
-                NetCueProcessingModeState = false;
+                TslblMode.Text = newText;
+                if (newText == "Mode: Always Process Incoming NetCues")
+                {
+                    TslblStartStop.Visible = false;
+                    // Immediately set the requested Audio Feed Volume
+                    if (settings != null)
+                    {
+                        if (settings.InputVolumeControl == 1)
+                        {
+                            float volume = float.Parse(settings.AudioFeedVolume);
+                            float dB = ConvertLinearToDB(volume);
+                            SetAudioFeedVolume(volume, dB);
+                        }
+                        else
+                        {
+                            if (!startup)
+                            {
+                                // Immediately set the requested Audio Feed Volume to startup value
+                                float dB = ConvertLinearToDB(audioFeedVolumeAtStartup);
+                                SetAudioFeedVolume(audioFeedVolumeAtStartup, dB); // return to normal volume when the software was started.
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    TslblStartStop.Visible = true;
+                    TslblStartStop.Text = "Processing Disabled";
+                    TslblStartStop.ForeColor = Color.Red;
+                    NetCueProcessingModeState = false;
 
-                // Immediately set the requested Audio Feed Volume to startup value
-                float dB = ConvertLinearToDB(audioFeedVolumeAtStartup);
-                SetAudioFeedVolume(audioFeedVolumeAtStartup, dB); // return to normal volume when the software was started.
+                    // Immediately set the requested Audio Feed Volume to startup value
+                    if (!startup)
+                    {
+                        float dB = ConvertLinearToDB(audioFeedVolumeAtStartup);
+                        SetAudioFeedVolume(audioFeedVolumeAtStartup, dB); // return to normal volume when the software was started.
+                    }
+                }
             }
         }
 
@@ -238,9 +285,18 @@ namespace Carrel_Stream_Assistant
                     audioInputDeviceText = defaultInputDevice.ID;
                     inputAudioDevice = enumerator.GetDevice(audioInputDeviceText);
                 }
-                inputAudioDevice.AudioEndpointVolume.MasterVolumeLevelScalar = volume;
-                AddLog($"Set Audio Feed Input Volume to: {dB:F2} dB");
-            }catch (Exception)
+                // Check if inputAudioDevice is not null before setting the volume
+                if (inputAudioDevice != null)
+                {
+                    inputAudioDevice.AudioEndpointVolume.MasterVolumeLevelScalar = volume;
+                    AddLog($"Set Audio Feed Input Volume to: {dB:F2} dB");
+                }
+                else
+                {
+                    AddLog("Could not set volume, input device is missing. Please reset the input audio feed device in setup.");
+                }
+            }
+            catch (Exception)
             {
                 AddLog("Could not set volume, input device is missing. Please reset the input audio feed device in setup.");
             }
@@ -443,7 +499,7 @@ namespace Carrel_Stream_Assistant
             string[] logFiles = Directory.GetFiles(logDirectory, "*.txt");
             DateTime now = DateTime.Now;
             DateTime currentDate = now.Date;
-            DateTime oldestAllowedDate = currentDate.AddDays(-7);
+            DateTime oldestAllowedDate = currentDate.AddDays(-32);
             string currentlogFileName = $"log_{currentDate:yyyyMMdd}.txt";
             string currentlogFilePath = Path.Combine(logDirectory, currentlogFileName);
 

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Carrel_Stream_Assistant
@@ -9,7 +11,7 @@ namespace Carrel_Stream_Assistant
         // Reference the Parent Form
         private readonly Form parentForm;
         private int countdownSeconds = 30;
-        private Timer countdownTimer;
+        private System.Windows.Forms.Timer countdownTimer;
         private int countdownLineIndex;
         EventHandler loadEventHandler = null; // Declare the event handler variable
 
@@ -19,9 +21,11 @@ namespace Carrel_Stream_Assistant
             // Hookup reference to parent
             parentForm = parent;
 
-            countdownTimer = new Timer();
+            countdownTimer = new System.Windows.Forms.Timer();
             countdownTimer.Interval = 1000; // 1 second
             countdownTimer.Tick += CountdownTimer_Tick;
+
+            this.Invalidate();
 
             switch (mode)
             {
@@ -57,45 +61,47 @@ namespace Carrel_Stream_Assistant
 
                 case "upload":
                     this.Invalidate();
-                    Load += loadEventHandler = (sender, e) => // Assign the event handler to the variable
+                    Load += async (sender, e) =>
                     {
-                        BeginInvoke((Action)(() =>
-                        {
-                            progressUpload.Visible = true;
-                            progressUpload.Value = 0;
-                            if (FTPOperations.UploadFile(ftpServer, reelItem, filename_to_upload, this))
-                            {
-                                TerminalUpdateEventArgs termArgs = new TerminalUpdateEventArgs(
-                                    "> File uploaded successful!",
-                                    Color.Green
-                                );
-                                parent.Invoke((Action)(() =>
-                                {
-                                    parent.AddLog("Uploaded file to FTP successfully.", Color.Green);
-                                }));
+                        progressUpload.Visible = true;
+                        progressUpload.Value = 0;
 
-                                UpdateScreen(this, termArgs);
-                                ftpTerminal.AppendText(Environment.NewLine);
-                                countdownLineIndex = ftpTerminal.Lines.Length - 1;
-                                countdownTimer.Start();
-                            }
-                            else
+                        if (await FTPOperations.UploadFileAsync(ftpServer, reelItem, filename_to_upload, this))
+                        {
+                            TerminalUpdateEventArgs termArgs = new TerminalUpdateEventArgs(
+                                "> File uploaded successful!",
+                                Color.Green
+                            );
+
+                            parent.Invoke((Action)(() =>
                             {
-                                TerminalUpdateEventArgs termArgs = new TerminalUpdateEventArgs(
-                                    "> File uploaded failed!",
-                                    Color.Red
-                                );
-                                parent.Invoke((Action)(() =>
-                                {
-                                    parent.AddLog("Failed to upload file to FTP!", Color.Red);
-                                }));
-                                UpdateScreen(this, termArgs);
-                                ftpTerminal.AppendText(Environment.NewLine);
-                                countdownLineIndex = ftpTerminal.Lines.Length - 1;
-                                countdownTimer.Start();
-                            }
-                        }));
+                                parent.AddLog("Uploaded file to FTP successfully.", Color.Green);
+                            }));
+
+                            UpdateScreen(this, termArgs);
+                            ftpTerminal.AppendText(Environment.NewLine);
+                            countdownLineIndex = ftpTerminal.Lines.Length - 1;
+                            countdownTimer.Start();
+                        }
+                        else
+                        {
+                            TerminalUpdateEventArgs termArgs = new TerminalUpdateEventArgs(
+                                "> File uploaded failed!",
+                                Color.Red
+                            );
+
+                            parent.Invoke((Action)(() =>
+                            {
+                                parent.AddLog("Failed to upload file to FTP!", Color.Red);
+                            }));
+
+                            UpdateScreen(this, termArgs);
+                            ftpTerminal.AppendText(Environment.NewLine);
+                            countdownLineIndex = ftpTerminal.Lines.Length + 1;
+                            countdownTimer.Start();
+                        }
                     };
+
                     Closing += (sender, e) =>
                     {
                         Load -= loadEventHandler; // Unsubscribe from the Load event
@@ -110,12 +116,19 @@ namespace Carrel_Stream_Assistant
             {
                 countdownSeconds--;
                 string updatedLine = $"Closing Window in {countdownSeconds} seconds...";
-                int currentSelectionStart = ftpTerminal.SelectionStart;
-                ftpTerminal.Select(ftpTerminal.GetFirstCharIndexFromLine(countdownLineIndex), ftpTerminal.Lines[countdownLineIndex].Length);
+                // Find the starting index of the last line
+                int lastLineStartIndex = ftpTerminal.GetFirstCharIndexFromLine(ftpTerminal.Lines.Length - 1);
+
+                // Set the selection start and length to cover the entire last line
+                ftpTerminal.SelectionStart = lastLineStartIndex;
+                ftpTerminal.SelectionLength = ftpTerminal.Lines[ftpTerminal.Lines.Length - 1].Length;
+
+                // Update the selected text with the new countdown message
                 ftpTerminal.SelectedText = updatedLine;
-                ftpTerminal.Select(currentSelectionStart, 0);
+
+                // Scroll to the end of the updated text
+                ftpTerminal.SelectionStart = ftpTerminal.Text.Length;
                 ftpTerminal.ScrollToCaret();
-                countdownLineIndex = ftpTerminal.Lines.Length - 1;
             }
             else
             {
@@ -125,6 +138,7 @@ namespace Carrel_Stream_Assistant
         }
         private void FormFTPOutput_Load(object sender, EventArgs e)
         {
+            this.Invalidate();
             FTPOperations.ScreenUpdated += UpdateScreen;
         }
 

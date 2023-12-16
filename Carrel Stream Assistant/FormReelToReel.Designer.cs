@@ -59,7 +59,7 @@ namespace Carrel_Stream_Assistant
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(17, 83);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(110, 16);
+            this.label1.Size = new System.Drawing.Size(109, 16);
             this.label1.TabIndex = 0;
             this.label1.Text = "Path w/Filename:";
             // 
@@ -69,7 +69,7 @@ namespace Carrel_Stream_Assistant
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(17, 188);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(103, 16);
+            this.label2.Size = new System.Drawing.Size(102, 16);
             this.label2.TabIndex = 1;
             this.label2.Text = "Start Command:";
             // 
@@ -79,7 +79,7 @@ namespace Carrel_Stream_Assistant
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(17, 224);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(104, 16);
+            this.label3.Size = new System.Drawing.Size(103, 16);
             this.label3.TabIndex = 2;
             this.label3.Text = "Stop Command:";
             // 
@@ -89,7 +89,7 @@ namespace Carrel_Stream_Assistant
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(17, 258);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(144, 16);
+            this.label4.Size = new System.Drawing.Size(143, 16);
             this.label4.TabIndex = 3;
             this.label4.Text = "Max Length (Seconds):";
             // 
@@ -153,9 +153,9 @@ namespace Carrel_Stream_Assistant
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(17, 134);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(404, 13);
+            this.label5.Size = new System.Drawing.Size(400, 13);
             this.label5.TabIndex = 10;
-            this.label5.Text = "{cartname} = Dynamic cart name, follows StartCommand + ** (eg. startrec**ballgame" +
+            this.label5.Text = "{cartname} = Dynamic cart name, follows StartCommand + :: (eg. startrec::ballgame" +
     ")";
             // 
             // label6
@@ -201,7 +201,7 @@ namespace Carrel_Stream_Assistant
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.Location = new System.Drawing.Point(17, 35);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(101, 16);
+            this.label10.Size = new System.Drawing.Size(100, 16);
             this.label10.TabIndex = 15;
             this.label10.Text = "Record Format:";
             // 
@@ -211,9 +211,10 @@ namespace Carrel_Stream_Assistant
             this.cboRecFormat.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboRecFormat.FormattingEnabled = true;
             this.cboRecFormat.Items.AddRange(new object[] {
-            "AAC (DEFAULT)",
-            "MP3",
-            "WAV"});
+            "OPUS - 64k - Recommended",
+            "AAC 128k",
+            "MP3 - 128k",
+            "WAV - 44100/16-bit"});
             this.cboRecFormat.Location = new System.Drawing.Point(118, 32);
             this.cboRecFormat.Name = "cboRecFormat";
             this.cboRecFormat.Size = new System.Drawing.Size(303, 24);
@@ -245,9 +246,9 @@ namespace Carrel_Stream_Assistant
             this.lblRootPath.AutoSize = true;
             this.lblRootPath.Location = new System.Drawing.Point(13, 64);
             this.lblRootPath.Name = "lblRootPath";
-            this.lblRootPath.Size = new System.Drawing.Size(196, 16);
+            this.lblRootPath.Size = new System.Drawing.Size(322, 16);
             this.lblRootPath.TabIndex = 1;
-            this.lblRootPath.Text = "Root Path for Upload (usually /):";
+            this.lblRootPath.Text = "Root Path for Upload (defaults to home dir of ftp user):";
             // 
             // cboFTPUpload
             // 

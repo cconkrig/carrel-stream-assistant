@@ -50,6 +50,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Graphics\CarrelStreamAssistant.ico</ApplicationIcon>
@@ -129,11 +130,18 @@
     </Compile>
     <Compile Include="Classes\AudioDeviceInfo.cs" />
     <Compile Include="Classes\ColoredListBoxItem.cs" />
+    <Compile Include="Classes\EncoderInfo.cs" />
     <Compile Include="Classes\PlaybackQueueItem.cs" />
     <Compile Include="Classes\ReelItem.cs" />
     <Compile Include="Classes\FTPServerItem.cs" />
     <Compile Include="Classes\SchemaUpdater.cs" />
     <Compile Include="Classes\TerminalUpdateEventArgs.cs" />
+    <Compile Include="FormSplash.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSplash.Designer.cs">
+      <DependentUpon>FormSplash.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormFTPOutput.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -192,6 +200,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormSetup.resx">
       <DependentUpon>FormSetup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormSplash.resx">
+      <DependentUpon>FormSplash.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
