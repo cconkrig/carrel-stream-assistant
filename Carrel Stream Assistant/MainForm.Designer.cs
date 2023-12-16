@@ -72,6 +72,8 @@ namespace Carrel_Stream_Assistant
             this.restoreWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitApplicationStopServiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.lstRecQueue = new System.Windows.Forms.ListBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.vuRecRight = new NAudio.Gui.VolumeMeter();
             this.vuRecLeft = new NAudio.Gui.VolumeMeter();
             this.btnEmergencyStopRec = new System.Windows.Forms.Button();
@@ -178,7 +180,7 @@ namespace Carrel_Stream_Assistant
             this.BtnStopPlayback.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.BtnStopPlayback.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnStopPlayback.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.BtnStopPlayback.Location = new System.Drawing.Point(585, 242);
+            this.BtnStopPlayback.Location = new System.Drawing.Point(587, 352);
             this.BtnStopPlayback.Name = "BtnStopPlayback";
             this.BtnStopPlayback.Size = new System.Drawing.Size(120, 68);
             this.BtnStopPlayback.TabIndex = 7;
@@ -287,7 +289,7 @@ namespace Carrel_Stream_Assistant
             this.lstQueue.ItemHeight = 16;
             this.lstQueue.Location = new System.Drawing.Point(12, 352);
             this.lstQueue.Name = "lstQueue";
-            this.lstQueue.Size = new System.Drawing.Size(818, 68);
+            this.lstQueue.Size = new System.Drawing.Size(441, 68);
             this.lstQueue.TabIndex = 9;
             // 
             // lblLog
@@ -315,7 +317,7 @@ namespace Carrel_Stream_Assistant
             this.btnClearQueue.BackColor = System.Drawing.SystemColors.Control;
             this.btnClearQueue.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnClearQueue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClearQueue.Location = new System.Drawing.Point(459, 242);
+            this.btnClearQueue.Location = new System.Drawing.Point(461, 352);
             this.btnClearQueue.Name = "btnClearQueue";
             this.btnClearQueue.Size = new System.Drawing.Size(120, 68);
             this.btnClearQueue.TabIndex = 12;
@@ -329,7 +331,7 @@ namespace Carrel_Stream_Assistant
             this.BtnStopandClear.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.BtnStopandClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnStopandClear.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.BtnStopandClear.Location = new System.Drawing.Point(710, 242);
+            this.BtnStopandClear.Location = new System.Drawing.Point(712, 352);
             this.BtnStopandClear.Name = "BtnStopandClear";
             this.BtnStopandClear.Size = new System.Drawing.Size(120, 68);
             this.BtnStopandClear.TabIndex = 13;
@@ -464,6 +466,8 @@ namespace Carrel_Stream_Assistant
             // groupBox3
             // 
             this.groupBox3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupBox3.Controls.Add(this.lstRecQueue);
+            this.groupBox3.Controls.Add(this.label2);
             this.groupBox3.Controls.Add(this.vuRecRight);
             this.groupBox3.Controls.Add(this.vuRecLeft);
             this.groupBox3.Controls.Add(this.btnEmergencyStopRec);
@@ -477,10 +481,30 @@ namespace Carrel_Stream_Assistant
             this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox3.Location = new System.Drawing.Point(459, 51);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(371, 181);
+            this.groupBox3.Size = new System.Drawing.Size(371, 276);
             this.groupBox3.TabIndex = 14;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Reel-to-Reel";
+            // 
+            // lstRecQueue
+            // 
+            this.lstRecQueue.Enabled = false;
+            this.lstRecQueue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lstRecQueue.FormattingEnabled = true;
+            this.lstRecQueue.Location = new System.Drawing.Point(17, 206);
+            this.lstRecQueue.Name = "lstRecQueue";
+            this.lstRecQueue.Size = new System.Drawing.Size(334, 56);
+            this.lstRecQueue.TabIndex = 20;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(14, 183);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(159, 15);
+            this.label2.TabIndex = 19;
+            this.label2.Text = "Encode / Upload Queue";
             // 
             // vuRecRight
             // 
@@ -701,6 +725,8 @@ namespace Carrel_Stream_Assistant
         internal NAudio.Gui.VolumeMeter vuRecLeft;
         internal NAudio.Gui.VolumeMeter vuRecRight;
         internal System.Windows.Forms.Button btnEmergencyStopRec;
+        private System.Windows.Forms.Label label2;
+        internal System.Windows.Forms.ListBox lstRecQueue;
     }
 }
 

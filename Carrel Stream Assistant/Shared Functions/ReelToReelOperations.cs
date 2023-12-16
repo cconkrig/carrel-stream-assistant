@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace Carrel_Stream_Assistant
 {
@@ -269,9 +270,16 @@ namespace Carrel_Stream_Assistant
                                 waveInEvent.Dispose();
                                 mainForm.AddLog($"Record handle disposed.");
                                 TurnRecordingStatusOff(mainForm);
-                                #pragma warning disable CS4014 //disable warning about awaiting a task. We don't care, let it process
-                                Task.Run(() => ConvertFileFormat(reelItem, mainForm));
-                                #pragma warning restore CS4014 //renable warning about awaiting a task.
+                                // Add the file to encode queue
+                                RecQueueItem recQueueItem = new RecQueueItem
+                                {
+                                    ReelItem = reelItem,
+                                    Action = "Encode",
+                                    ActionText = $"Encode Audio: {mainForm.currentReelToReelFilename}",
+                                    OutputFilename = mainForm.currentReelToReelFilename
+                                };
+                                mainForm.EnqueueRecQueueTask(recQueueItem);
+                                mainForm.AddLog($"{recQueueItem.ActionText} added to queue for processing...");
                             }
 
                         }
@@ -289,7 +297,22 @@ namespace Carrel_Stream_Assistant
             }
         }
 
-        private static void ConvertFileFormat(ReelItem reelItem, MainForm mainForm)
+        internal static async Task ProcessRecQueueTaskAsync(RecQueueItem task, MainForm mainForm)
+        {
+            switch (task.Action)
+            {
+                case "Encode":
+                    await Task.Run(() => ConvertFileFormat(task.ReelItem, mainForm));
+                    break;
+
+                case "Upload":
+                    await Task.Run(() => UploadFTP(task.ReelItem, mainForm, task.OutputFilename));
+                    break;
+            }
+            mainForm.UpdateRecQueueList();
+        }
+
+        private static async Task ConvertFileFormat(ReelItem reelItem, MainForm mainForm)
         {
             string outputFilePath = mainForm.currentReelToReelFilename;
             string reelFileName = mainForm.currentReelToReelFilename + ".tmp";
@@ -309,6 +332,7 @@ namespace Carrel_Stream_Assistant
                         mainForm.Invoke((Action)(() =>
                         {
                             mainForm.AddLog("File has finalized. Beginning conversion...");
+                            mainForm.currentReelToReelFilename = null;
                         }));
                     }
                 }
@@ -323,13 +347,13 @@ namespace Carrel_Stream_Assistant
             switch (reelItem.Format)
             {
                 case 0:
-                    EncodeAudioFile(AudioEncoder.OPUS,reelItem, reelFileName, mainForm, outputFilePath);
+                    await EncodeAudioFile(AudioEncoder.OPUS,reelItem, reelFileName, mainForm, outputFilePath);
                     break;
                 case 1:
-                    EncodeAudioFile(AudioEncoder.AAC, reelItem, reelFileName, mainForm, outputFilePath);
+                    await EncodeAudioFile(AudioEncoder.AAC, reelItem, reelFileName, mainForm, outputFilePath);
                     break;
                 case 2:
-                    EncodeAudioFile(AudioEncoder.MP3, reelItem, reelFileName, mainForm, outputFilePath);
+                    await EncodeAudioFile(AudioEncoder.MP3, reelItem, reelFileName, mainForm, outputFilePath);
                     break;
                 case 3:
                     // standard old .wav file, just rename
@@ -340,10 +364,16 @@ namespace Carrel_Stream_Assistant
                     try
                     {
                         File.Move(reelFileName, outputFilePath);
-                        mainForm.Invoke((Action)(() =>
+                        // Add the file to encode queue
+                        RecQueueItem recQueueItem = new RecQueueItem
                         {
-                            UploadFTP(reelItem, mainForm, outputFilePath);
-                        }));
+                            ReelItem = reelItem,
+                            Action = "Upload",
+                            ActionText = $"Upload Audio: {outputFilePath}",
+                            OutputFilename = outputFilePath
+                        };
+                        mainForm.EnqueueRecQueueTask(recQueueItem);
+                        mainForm.AddLog($"{recQueueItem.ActionText} added to queue for processing...");
                     }
                     catch (Exception)
                     {
@@ -357,7 +387,7 @@ namespace Carrel_Stream_Assistant
             }
         }
 
-        private static void EncodeAudioFile(AudioEncoder encoder, ReelItem reelItem, string reelFileName, MainForm mainForm, string outputFilePath)
+        private static async Task EncodeAudioFile(AudioEncoder encoder, ReelItem reelItem, string reelFileName, MainForm mainForm, string outputFilePath)
         {
             try
             {
@@ -395,8 +425,16 @@ namespace Carrel_Stream_Assistant
                 mainForm.Invoke((Action)(() =>
                 {
                     mainForm.AddLog($"Conversion to OPUS (OGG) completed: {outputFilePath}");
-                    mainForm.currentReelToReelFilename = null;
-                    UploadFTP(reelItem, mainForm, outputFile);
+                    // Add the file to encode queue
+                    RecQueueItem recQueueItem = new RecQueueItem
+                    {
+                        ReelItem = reelItem,
+                        Action = "Upload",
+                        ActionText = $"Upload Audio: {outputFilePath}",
+                        OutputFilename = outputFilePath
+                    };
+                    mainForm.EnqueueRecQueueTask(recQueueItem);
+                    mainForm.AddLog($"{recQueueItem.ActionText} added to queue for processing...");
                 }));
             }
             catch (Exception e)
@@ -409,6 +447,7 @@ namespace Carrel_Stream_Assistant
                     mainForm.currentReelToReelFilename = null;
                 }));
             }
+            await Task.CompletedTask; // Replace with the actual completion logic
         }
 
 
@@ -431,8 +470,11 @@ namespace Carrel_Stream_Assistant
                     mainForm.AddLog($"Starting FTP Upload Sequence...");
                 }));
                 FTPServerItem ftpServer = DatabaseOperations.GetFTPServerById(reelItem.FTPServerId);
-                FormFTPOutput FormFTPOutput = new FormFTPOutput(mainForm, "upload", ftpServer, reelItem, outputFilePath);
-                FormFTPOutput.Show();
+        mainForm.Invoke((Action)(() =>
+        {
+            FormFTPOutput FormFTPOutput = new FormFTPOutput(mainForm, "upload", ftpServer, reelItem, outputFilePath);
+            FormFTPOutput.Show();
+        }));
             }
         }
 

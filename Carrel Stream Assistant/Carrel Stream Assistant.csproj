@@ -132,6 +132,7 @@
     <Compile Include="Classes\ColoredListBoxItem.cs" />
     <Compile Include="Classes\EncoderInfo.cs" />
     <Compile Include="Classes\PlaybackQueueItem.cs" />
+    <Compile Include="Classes\RecQueueItem.cs" />
     <Compile Include="Classes\ReelItem.cs" />
     <Compile Include="Classes\FTPServerItem.cs" />
     <Compile Include="Classes\SchemaUpdater.cs" />

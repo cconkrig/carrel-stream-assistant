@@ -23,6 +23,9 @@ namespace Carrel_Stream_Assistant
         public readonly static string databaseName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Cyber-Comp Technologies, LLC", "Carrel Stream Assistant", "stream_assist.db");
         private readonly static string connectionString = $"Data Source={databaseName};Version=3;";
         private readonly string logDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Cyber-Comp Technologies, LLC", "Carrel Stream Assistant", "log");
+        private readonly Queue<RecQueueItem> recTaskQueue = new Queue<RecQueueItem>();
+        private readonly object recQueueLock = new object();
+        private bool recQueueIsProcessing = false;
         public static MainForm Instance { get; private set; }
         private readonly UdpClient udpClient;
         #pragma warning disable IDE0044 // Disable "Make field readonly" suggestion
@@ -901,6 +904,7 @@ namespace Carrel_Stream_Assistant
             }
         }
 
+
         private void SampleChannel_PreVolumeMeter1(object sender, StreamVolumeEventArgs e)
         {
             // Get the peak volume values for the left and right channels
@@ -1283,6 +1287,72 @@ namespace Carrel_Stream_Assistant
         private void BtnEmergencyStopRec_Click(object sender, EventArgs e)
         {
             ReelToReelOperations.StopReel(this, "Emergency");
+        }
+        public void EnqueueRecQueueTask(RecQueueItem task)
+        {
+            lock (recQueueLock)
+            {
+                recTaskQueue.Enqueue(task);
+                if (!recQueueIsProcessing)
+                {
+                    // Start processing tasks if not already started
+                    Task.Run(() => ProcessTasks());
+                }
+                UpdateRecQueueList();
+            }
+        }
+        private async Task ProcessTasks()
+        {
+            lock (recQueueLock)
+            {
+                if (recQueueIsProcessing)
+                {
+                    // If already processing, return to avoid running multiple instances concurrently
+                    return;
+                }
+                recQueueIsProcessing = true;
+            }
+
+            while (true)
+            {
+                RecQueueItem task = null;
+
+                lock (recQueueLock)
+                {
+                    if (recTaskQueue.Count > 0)
+                    {
+                        task = recTaskQueue.Dequeue();
+                    }
+                    else
+                    {
+                        // If the queue is empty, stop processing
+                        recQueueIsProcessing = false;
+                        return;
+                    }
+                }
+                // Process the task (replace this with your actual processing logic)
+                await ReelToReelOperations.ProcessRecQueueTaskAsync(task, MainForm.Instance);
+            }
+        }
+
+        internal void UpdateRecQueueList()
+        {
+            if (lstRecQueue.InvokeRequired)
+            {
+                lstRecQueue.Invoke(new Action(UpdateRecQueueList));
+            }
+            else
+            {
+                // Display the current queue in the ListBox
+                lstRecQueue.Items.Clear();
+                lock (recQueueLock)
+                {
+                    foreach (var task in recTaskQueue)
+                    {
+                        lstRecQueue.Items.Add($"{task.ActionText}");
+                    }
+                }
+            }
         }
 
     }
