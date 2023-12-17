@@ -256,3 +256,5 @@ obj/
 # Windows shortcuts
 *.lnk
 
+# VSIDX files
+*.vsidx

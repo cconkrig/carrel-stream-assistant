@@ -316,12 +316,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E0546A5DA870D2C86EAAA74136EC32FF"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_040C24590BCEB7A71B3E7F01BAC3E737"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -377,6 +371,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_E331DD657F15FF07E8FA047E7D6C3D2C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_E0546A5DA870D2C86EAAA74136EC32FF"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1135,6 +1135,11 @@
             "AssemblyAsmDisplayName" = "8:Carrel Stream Assistant Custom Controls Library, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_E0546A5DA870D2C86EAAA74136EC32FF"
+                    {
+                    "Name" = "8:Carrel Stream Assistant Custom Controls Library.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Carrel Stream Assistant Custom Controls Library.dll"
             "TargetName" = "8:"
@@ -1379,15 +1384,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Carrel Stream Assistant"
-        "ProductCode" = "8:{E8E88F9B-4FD5-4233-A4B4-CC50C29BBE57}"
-        "PackageCode" = "8:{4F86C6D1-10AA-461E-BEC3-3CA89C0683E8}"
+        "ProductCode" = "8:{98556EA3-6E3F-4F2D-9A6B-53103003E59F}"
+        "PackageCode" = "8:{82E7B09A-0BE0-4557-8809-12E4E86B7CA3}"
         "UpgradeCode" = "8:{1C93BCB4-AB7C-48FC-A804-D79957D64CA6}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.28"
+        "ProductVersion" = "8:1.0.29"
         "Manufacturer" = "8:Cyber-Comp Technologies, LLC."
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://cyber-comp.cc"
@@ -1929,7 +1934,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_4854D6C9F770477E91E44177CC77D0BB"
             {
-            "SourcePath" = "8:..\\Carrel Stream Assistant\\obj\\Release\\Carrel Stream Assistant.exe"
+            "SourcePath" = "8:..\\Carrel Stream Assistant\\obj\\Debug\\Carrel Stream Assistant.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_10C7A6A36FD64774BB2F196E105A494F"
